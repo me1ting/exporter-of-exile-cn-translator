@@ -5,7 +5,7 @@ import {
     transGem, transGemProperty
 } from './resources.js';
 
-export function translate(data) {
+export function translateItems(data) {
     const items = data.items;
     let translatedItems = [];
     for (const item of items) {
@@ -42,13 +42,26 @@ export function translateItem(item) {
     }
 
     if (item.name) {
-        item.name = transName(item.name);
+        item.name = transName(item.name, item.baseType);
     }
 
     if (item.baseType) {
-        item.baseType = transBaseType(item.baseType);
+        //硬编码处理重复项。
+        if(item.baseType === "丝绸手套"){
+            if (item.icon.endsWith("GlovesInt3.png")){
+                item.baseType = "Silk Gloves";
+            }else if(item.icon.endsWith("FingerlessSilkGloves.png")){
+                item.baseType = "Fingerless Silk Gloves";
+            }else{
+                console.log("error: unreachable code");
+            }
+        }else{
+            item.baseType = transBaseType(item.baseType, getLevelRequirements(item));
+        }
     }
 
+    // 一般情况下，baseType === typeLine。
+    // 蓝色药剂比较特殊，typeLine === 修饰词+baseType，因此使用翻译后的baseType替代。
     item.typeLine = item.baseType;
 
 
@@ -56,7 +69,7 @@ export function translateItem(item) {
         for (const p of item.properties) {
             p.name = transProperty(p.name);
 
-            //仅限珠宝，范围值需要翻译：大、中、小
+            //仅限珠宝，范围值需要翻译：大、中、小......
             if (p.name === "Radius") {
                 if (p.values) {
                     let val = p.values[0];
@@ -136,6 +149,17 @@ export function translateItem(item) {
 
         }
     }
+}
+
+function getLevelRequirements(item) {
+    if (item && item.requirements) {
+        for (const r of item.requirements) {
+            if (r.name === "等级") {
+                return r.values[0];
+            }
+        }
+    }
+    return -1;
 }
 
 function translateGem(item) {

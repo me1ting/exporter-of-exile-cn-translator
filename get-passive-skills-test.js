@@ -2,7 +2,7 @@ import {
     open,
 } from 'node:fs/promises';
 
-import { translate } from './get-passive-skills.js';
+import { translatePassiveSkills } from './get-passive-skills.js';
 
 
 let readPath = "./demo/pob/tree1.json";
@@ -14,7 +14,7 @@ try {
     readFileHandle = await open(readPath);
     const content = await readFileHandle.readFile();
     let data = JSON.parse(content);
-    translate(data);
+    translatePassiveSkills(data);
     writeFileHandle = await open(readPath + ".transalted.json", "w+");
     await writeFileHandle.writeFile(JSON.stringify(data));
 

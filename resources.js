@@ -1,43 +1,60 @@
 import {
     uniques, weapons, armour, accessories, flasks, gems, properties, requirements,
-    passiveSkills, modifiers, shouldBeTranlated, jewels,
+    formulableNodes, modifiers, jewels, shouldBeTranlated
 } from "./load-resources.js";
 
 /**
  * 翻译物品名字。
- * 目前只翻译了传奇名字。
  * 
- * @param {*} str 
+ * 存在重复项：
+ * 时空扭曲 通过baseType区分
+ * 
+ * @param {*} str 物品名称
+ * @param {*} baseType 物品基础类型，用于区分重复的传奇名称。
  * @returns 
  */
-export function transName(str) {
-    let val = uniques[str];
-    //这里对于所有非传奇名称，直接返回占位符"xxx"，返回原始名称会显示乱码，返回空白字符串会报错。
+export function transName(str, baseType) {
+    //存在重复的传奇名称，这里作硬编码处理。
+    if (str === "时空扭曲") {
+        if (baseType === "青玉护身符") {
+            return "Warped Timepiece";
+        } else if (baseType === "月光石戒指") {
+            return "Timetwist";
+        }
+    }
+    let val = uniques.get(str);
+    // 对于所有非传奇名称，翻译的价值不大，目前使用占位符替代。
+    // 直接返回占位符"xxx"，返回原始名称会显示乱码，返回空白字符串会报错。
     return val ? val : "xxx";
 }
 
 /**
  * 翻译基础类型。
- * @param {*} str 
+ * 
+ * 存在重复项：
+ * 丝绸手套 护甲 调用方通过icon区分
+ * 龙骨细剑 武器 除了需求等级，没有任何区别，区分价值不大；由于需求等级又受到词缀影响，因此没法区分。
+ * 
+ * @param {*} str 类型 
  * @returns 
  */
 export function transBaseType(str) {
-    let val = weapons[str];
+    let val = weapons.get(str);//武器
     if (!val) {
-        val = armour[str];
+        val = armour.get(str);//护甲
     }
     if (!val) {
-        val = accessories[str];
+        val = accessories.get(str);//配件
     }
     if (!val) {
-        val = flasks[str];
+        val = flasks.get(str);//药剂
     }
     if (!val) {
-        val = gems[str];
+        val = gems.get(str);//技能
     }
 
     if (!val) {
-        val = jewels[str];
+        val = jewels.get(str);//珠宝
     }
 
     if (!val) {
@@ -51,12 +68,12 @@ export function transBaseType(str) {
 }
 
 /**
- * 翻译品质。
+ * 翻译属性。
  * @param {*} str 
  * @returns 
  */
 export function transProperty(str) {
-    let val = properties[str];
+    let val = properties.get(str);
 
     if (!val) {
         shouldBeTranlated({
@@ -69,7 +86,7 @@ export function transProperty(str) {
 }
 
 export function transRequirement(str) {
-    let val = requirements[str];
+    let val = requirements.get(str);
     if (!val) {
         shouldBeTranlated({
             "type": "requirement",
@@ -79,11 +96,81 @@ export function transRequirement(str) {
     return val ? val : str;
 }
 
-export function transPassiveSkill(str) {
-    let val = passiveSkills[str];
+/**
+ * 翻译涂油天赋技能。
+ * 
+ * 存在重复项：电能之击、毁灭装置、毒蛇之牙、英勇、汲血者
+ * 由于重复项的重复次数目前最大为2，因此目前使用浏览器原生的confirm进行区分。
+ * 如果后续重复次数超过2，可以使用prompt。
+ * 
+ * @param {*} str 
+ * @returns 
+ */
+export function transFormulableNode(str) {
+    if (str === "电能之击") {
+        if (confirm) {
+            if (confirm("请手动确认天赋技能：电能之击\n\n点击确认选择：若你近期内感电任意敌人，则伤害提高30%...\n点击取消选择：武器造成的伤害穿透 8% 闪电抗性...")) {
+                return "Static Blows";
+            } else {
+                return "Arcing Blows";
+            }
+        } else {
+            console.log("skip passive skill: ", str);
+        }
+    }
+
+    if (str === "毁灭装置") {
+        if (confirm) {
+            if (confirm("请手动确认天赋技能：毁灭装置\n\n点击确认选择：地雷持续时间延长 60%...\n点击取消选择：地雷暴击率提高 50%...")) {
+                return "Destructive Apparatus";
+            } else {
+                return "Devastating Devices";
+            }
+        } else {
+            console.log("skip passive skill: ", str);
+        }
+    }
+
+    if (str === "毒蛇之牙") {
+        if (confirm) {
+            if (confirm("请手动确认天赋技能：毒蛇之牙\n\n点击确认选择：地雷持续时间延长 60%...\n点击取消选择：地雷暴击率提高 50%...")) {
+                return "Adder's Touch";
+            } else {
+                return "Fangs of the Viper";
+            }
+        } else {
+            console.log("skip passive skill: ", str);
+        }
+    }
+
+    if (str === "英勇") {
+        if (confirm) {
+            if (confirm("请手动确认天赋技能：英勇\n\n点击确认选择：闪避值与护甲提高 24%...\n点击取消选择：+30 力量...")) {
+                return "Bravery";
+            } else {
+                return "Prowess";
+            }
+        } else {
+            console.log("skip passive skill: ", str);
+        }
+    }
+
+    if (str === "汲血者") {
+        if (confirm) {
+            if (confirm("请手动确认天赋技能：汲血者\n\n点击确认选择：生命上限提高 10%...\n点击取消选择：攻击速度提高 12%...")) {
+                return "Blood Drinker";
+            } else {
+                return "Lust for Carnage";
+            }
+        } else {
+            console.log("skip passive skill: ", str);
+        }
+    }
+
+    let val = formulableNodes.get(str);
     if (!val) {
         shouldBeTranlated({
-            "type": "passiveSkill",
+            "type": "formulableNode",
             "content": str
         });
     }
@@ -98,8 +185,8 @@ const ADDED_SMALL_Passive_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
 export function transEnchantMod(str) {
     //项链附魔
     if (str.startsWith(ALLOCATE_CN)) {
-        let passiveSkill = str.substring(ALLOCATE_EN.length);
-        return ALLOCATE_EN + transPassiveSkill(passiveSkill);
+        let node = str.substring(ALLOCATE_CN.length);
+        return ALLOCATE_EN + transFormulableNode(node);
     }
 
     //星团珠宝特殊词缀
@@ -137,14 +224,14 @@ export function transScourgeMods(str) {
 
 function transModifier(str) {
     //整体匹配
-    let results = modifiers[str];
-    if (results) {
-        return results[0].toTplBody;
+    let result = modifiers.get(str);
+    if (result) {
+        return result.toTplBody;
     }
 
     //解析匹配
     let m = Modifier.fromString(str);
-    let result = transModifierInObject(m);
+    result = transModifierInObject(m);
     if (result) {
         return result;
     }
@@ -166,9 +253,8 @@ function transModifier(str) {
 
 function transModifierInObject(m) {
     let tplBody = m.getTemplateBody();
-    let translations = modifiers[tplBody];
-    if (translations) {
-        let t = chooseTheBestOne(translations, m.params);
+    let t = modifiers.get(tplBody);
+    if (t) {
         let toTplBody = t.toTplBody;
         let fromParams = t.fromParams;
         let toParams = t.toParams;
@@ -201,7 +287,7 @@ function chooseTheBestOne(transaltions, params) {
 
 export function transGem(str) {
     let gem = Gem.fromString(str);
-    let val = gems[gem.name];
+    let val = gems.get(gem.name);
 
     if (!val) {
         shouldBeTranlated({

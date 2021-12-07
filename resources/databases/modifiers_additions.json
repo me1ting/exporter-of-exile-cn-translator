@@ -1,0 +1,14 @@
+{
+    "你造成暴击时有 {0}% 的几率获得一次药剂充能": "{0}% chance to gain a Flask Charge when you deal a Critical Strike",
+    "附加 {0} - {1} 基础火焰伤害": "Adds {0} to {1} Fire Damage",
+    "你的法术每击中 {1} 个敌人会回复 {0} 魔力": "{0} Mana gained for each Enemy Hit by your Spells",
+    "被点燃时使用可以在接下来 {0} 秒免疫点燃\n使用时移除所有燃烧效果": "Grants Immunity to Ignite for {0} seconds if used while Ignited\nRemoves all Burning when used",
+    "生效时间缩短 {0}%":"{0}% reduced Duration",
+    "在流血时使用可以在接下来 {0} 秒免疫流血\n被腐化之血影响时使用可以在接下来 {1} 秒免疫腐化之血":"Grants Immunity to Bleeding for {0} seconds if used while Bleeding\nGrants Immunity to Corrupted Blood for {1} seconds if used while affected by Corrupted Blood",
+    "生效时间延长 {0}":"{0} increased Duration",
+    "未保留的魔力全满时不会移除药剂效果\n药剂效果没有伫列":"Flask effect is not removed when Unreserved Mana is Filled\nFlask effect does not Queue",
+    "被冰缓时使用可以在接下来 {0} 内免疫冰缓\n被冻结时使用可以在接下来 {1} 秒免疫冻结":"Grants Immunity to Chill for {0} seconds if used while Chilled\nCHAR(10)Grants Immunity to Freeze for {1} seconds if used while Frozen",
+    "持弓类施放法术时触发一个插入的弓类技能，它有{0} 秒冷却时间":"Trigger a Socketed Bow Skill when you Cast a Spell while wielding a Bow, with a {0} second Cooldown",
+    "暴击率提高 {0}":"{0} increased Critical Strike Chance",
+    "能量护盾充能时间提前 {0}":"{0} faster start of Energy Shield Recharge"
+}

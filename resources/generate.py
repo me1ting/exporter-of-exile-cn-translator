@@ -2,290 +2,245 @@ from re import finditer
 import sqlite3
 import json
 
-# uniques.json
+
+# uniques.js
 
 
 def generate_uniques():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Uniques.txt"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from "unique"').fetchall()
     con.close()
-    rows.extend(patch)
 
-    with open('./uniques.json', 'wt') as f:
-        f.write(json.dumps(rows))
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
 
-# armour.json
+    save_dict_as_javascript('./uniques.js', data, 'uniques')
+
+
+# armour.js
 
 
 def generate_armour():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Items_Armour.txt"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from armour').fetchall()
     con.close()
-    rows.extend(patch)
 
-    with open('./armour.json', 'wt') as f:
-        f.write(json.dumps(rows))
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
+
+    save_dict_as_javascript('./armour.js', data, 'armour')
 
 
-# accessories.json
+# accessories.js
 
 
 def generate_accessories():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Items_Accessories.txt"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from accessory').fetchall()
     con.close()
-    rows.extend(patch)
 
-    with open('./accessories.json', 'wt') as f:
-        f.write(json.dumps(rows))
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
 
-# flasks.json
+    save_dict_as_javascript('./accessories.js', data, 'accessories')
+
+
+# flasks.js
 
 
 def generate_flasks():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Items_Flasks.txt"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from flask').fetchall()
     con.close()
-    rows.extend(patch)
 
-    with open('./flasks.json', 'wt') as f:
-        f.write(json.dumps(rows))
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
 
-# weapons.json
+    save_dict_as_javascript('./flasks.js', data, 'flasks')
+
+
+# weapons.js
 
 
 def generate_weapons():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Items_Weapons.txt"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from weapon').fetchall()
     con.close()
-    rows.extend(patch)
 
-    with open('./weapons.json', 'wt') as f:
-        f.write(json.dumps(rows))
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
 
-# gems.json
+    save_dict_as_javascript('./weapons.js', data, 'weapons')
+
+
+# gems.js
 
 
 def generate_gems():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Items_Gems.txt"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from gem').fetchall()
     con.close()
-    rows.extend(patch)
 
-    result = [[r[0].replace('(', '（').replace(')', '）'), r[1]] for r in rows]
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
 
-    with open('./gems.json', 'wt') as f:
-        f.write(json.dumps(result))
+    save_dict_as_javascript('./gems.js', data, 'gems')
 
-# requirement.json
+
+# requirements.js
 
 
 def generate_requirements():
-    con = sqlite3.connect('patch.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
         'select k,v from requirement').fetchall()
-
-    with open('./requirements.json', 'wt') as f:
-        f.write(json.dumps(rows))
-
     con.close()
 
-# properties.json
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
+
+    save_dict_as_javascript('./requirements.js', data, 'requirements')
+
+
+# properties.js
 
 
 def generate_properties():
-    con = sqlite3.connect('patch.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
         'select k,v from property').fetchall()
-
-    with open('./properties.json', 'wt') as f:
-        f.write(json.dumps(rows))
-
     con.close()
 
-# passive-skills.json
+    data = {}
+    for r in rows:
+        data[r[0]] = r[1]
+
+    save_dict_as_javascript('./properties.js', data, 'properties')
 
 
-def generate_passive_skills():
-    con = sqlite3.connect('resources.db')
+# formulable-nodes.js
+
+
+def generate_formulable_nodes():
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="tree_dn"').fetchall()
+        'select k,v from formulable_node').fetchall()
     con.close()
 
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
-        'select k,v from passive_skill').fetchall()
-    con.close()
-    rows.extend(patch)
+    data = {}
 
-    with open('./passive-skills.json', 'wt') as f:
-        f.write(json.dumps(rows))
+    for r in rows:
+        data[r[0]] = r[1]
 
-# modifiers.json
+    save_dict_as_javascript('./formulable-nodes.js', data, 'formulableNodes')
+
+# modifiers.js
 
 
 def generate_modifiers():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="statDescriptions"').fetchall()
-    con.close()
-
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    patch = cur.execute(
         'select k,v from modifier').fetchall()
     con.close()
-    rows.extend(patch)
 
     # 为了方便前端使用，需要将词缀模板进行处理：
     # - 将模板拆分为模板主体和形式参数列表两个部分
-    newRows = []
+    formattedRows = []
 
+    for r in rows:
+        k = r[0]
+        v = r[1]
+        fromTplBody, fromParams = parseTemplate(k)
+        toTplBody, toParams = parseTemplate(v)
+
+        formattedRows.append(
+            (fromTplBody, {"fromParams": fromParams, "toTplBody": toTplBody, "toParams": toParams}))
+
+    rows = formattedRows
+
+    data = {}
+
+    # 模板主体存在重复的情况，只是参数顺序的不同，因此任意一个值都是正确的。
+    for r in rows:
+        data[r[0]] = r[1]
+
+    save_dict_as_javascript('./modifiers.js', data, 'modifiers')
+
+
+def parseTemplate(t):
     import re
-    # 匹配模板中的：{0},{1}...
     pattern = re.compile(r'\{(\d)\}')
-    for pair in rows:
-        k = pair[0]
-        v = pair[1]
+    matchs = list(pattern.finditer(t))
 
-        kMatchs = list(pattern.finditer(k))
-        vMatchs = list(pattern.finditer(v))
+    if len(matchs) == 0:
+        return t, []
 
-        kBuf = []
-        kParams = []
-        lastIndex = 0
-        for i, m in enumerate(kMatchs):
-            param = m.group(1)
-            start = m.start()
-            end = m.end()
+    buf = []
+    params = []
+    lastIndex = 0
+    for m in matchs:
+        param = m.group(1)
+        start = m.start()
+        end = m.end()
 
-            kParams.append(int(param))
-            kBuf.append(k[lastIndex:start])
-            kBuf.append('{}')
+        params.append(int(param))
+        buf.append(t[lastIndex:start])
+        buf.append('{}')  # 占位符
 
-            lastIndex = end
+        lastIndex = end
 
-        if lastIndex < len(k):
-            kBuf.append(k[lastIndex:])
+    if lastIndex < len(t):
+        buf.append(t[lastIndex:])
 
-        vBuf = []
-        vParams = []
-        lastIndex = 0
-        if(len(kParams)) > 0:
-            for m in pattern.finditer(v):
-                param = m.group(1)
-                start = m.start()
-                end = m.end()
-
-                vParams.append(int(param))
-                vBuf.append(v[lastIndex:start])
-                vBuf.append('{}')
-
-                lastIndex = end
-
-        if lastIndex < len(v):
-            vBuf.append(v[lastIndex:])
-
-        newRows.append((''.join(kBuf), kParams, ''.join(vBuf), vParams))
-
-    with open('./modifiers.json', 'wt') as f:
-        f.write(json.dumps(newRows))
-
-# gem-tags.json
-
-
-def generate_gem_tags():
-    con = sqlite3.connect('resources.db')
-    cur = con.cursor()
-    rows = cur.execute(
-        'select v,k from translate_cn where source="Gems_tag"').fetchall()
-
-    with open('./gem-tags.json', 'wt') as f:
-        f.write(json.dumps(rows))
-
-    con.close()
-
-# gem-properties.json
-
-
-def generate_gem_properties():
-    con = sqlite3.connect('patch.db')
-    cur = con.cursor()
-    rows = cur.execute(
-        'select k,v from gem_property').fetchall()
-
-    with open('./gem-properties.json', 'wt') as f:
-        f.write(json.dumps(rows))
-
-    con.close()
-
+    return ''.join(buf), params
 
 # jewels.json
 
 
 def generate_jewels():
-    con = sqlite3.connect('resources.db')
+    con = sqlite3.connect('databases/translations.db')
     cur = con.cursor()
     rows = cur.execute(
-        'select v,k from translate_cn where source="Items_Jewels.txt"').fetchall()
-
-    with open('./jewels.json', 'wt') as f:
-        f.write(json.dumps(rows))
-
+        'select k,v from jewel').fetchall()
     con.close()
+
+    data = {}
+
+    for r in rows:
+        data[r[0]] = r[1]
+
+    save_dict_as_javascript('./jewels.js', data, 'jewels')
+
+
+def save_dict_as_javascript(path, data, name):
+    with open(path, 'wt') as f:
+        f.write(f'export const {name} = new Map([')
+        for k, v in data.items():
+            f.write(f'[{json.dumps(k)},{json.dumps(v)}],')
+        f.write("]);")
 
 
 generate_uniques()
@@ -294,10 +249,8 @@ generate_accessories()
 generate_flasks()
 generate_weapons()
 generate_gems()
-generate_properties()
 generate_requirements()
-generate_passive_skills()
+generate_properties()
+generate_formulable_nodes()
 generate_modifiers()
-# generate_gem_tags()
-# generate_gem_properties()
 generate_jewels()

@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/me1ting/poe-cn-export-translator/issues"
   },
-  "homepage": "https://github.com/me1ting/poe-cn-export-translator#readme"
+  "homepage": "https://github.com/me1ting/poe-cn-export-translator#readme",
+  "devDependencies": {
+    "eslint": "^8.4.1"
+  }
 }

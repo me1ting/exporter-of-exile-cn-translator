@@ -130,6 +130,7 @@ def init_weapons():
     con.commit()
     con.close()
 
+
 def init_gems():
     con = sqlite3.connect('resources.db')
     cur = con.cursor()
@@ -143,15 +144,20 @@ def init_gems():
         [r[0].replace('(', '（').replace(')', '）'), r[1]] for r in rows]
     rows = formattedRows
     # 补充
-    rows.append(['持续时间缩短（辅）','Less Duration'])
-    rows.append(['弹幕','Barrage'])
-    rows.append(['提高暴击几率（辅）','Increased Critical Strikes'])
-    rows.append(['持续时间延长（辅）','Increased Duration'])
+    rows.append(['持续时间缩短（辅）', 'Less Duration'])
+    rows.append(['弹幕', 'Barrage'])
+    rows.append(['提高暴击几率（辅）', 'Increased Critical Strikes'])
+    rows.append(['持续时间延长（辅）', 'Increased Duration'])
+    rows.append(['枯萎', 'Blight'])
+    rows.append(['终结（辅）', 'Culling Strike'])
+    rows.append(['能量之刃', 'Energy Blade'])
+    rows.append(['震波', 'Shockwave'])
+    rows.append(['震波（辅）', 'Shockwave'])
     # 覆盖
-    rows.append(['低阶毒化（辅）','Chance to Poison'])
-    rows.append(['毒化（辅）','Critical Strike Affliction'])
-    rows.append(['增大范围（强辅）','Awakened Increased Area of Effect'])
-    rows.append(['武器元素伤害（强辅）','Awakened Elemental Damage with Attacks'])
+    rows.append(['低阶毒化（辅）', 'Chance to Poison'])
+    rows.append(['毒化（辅）', 'Critical Strike Affliction'])
+    rows.append(['增大范围（强辅）', 'Awakened Increased Area of Effect'])
+    rows.append(['武器元素伤害（强辅）', 'Awakened Elemental Damage with Attacks'])
 
     data = {}
     for r in rows:
@@ -166,6 +172,7 @@ def init_gems():
         cur.execute(f'INSERT INTO "gem" ("k", "v") VALUES ("{k}","{v}")')
     con.commit()
     con.close()
+
 
 def init_jewels():
     con = sqlite3.connect('resources.db')
@@ -189,6 +196,7 @@ def init_jewels():
         cur.execute(f'INSERT INTO "jewel" ("k", "v") VALUES ("{k}","{v}")')
     con.commit()
     con.close()
+
 
 if __name__ == "__main__":
     init_uniques()

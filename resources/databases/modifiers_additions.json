@@ -9,5 +9,9 @@
     "能量护盾充能时间提前 {0}": "{0} faster start of Energy Shield Recharge",
     "伤害提高 {0}%": "{0}% increased Damage",
     "移动速度提高 {0}%": "{0}% increased Movement Speed",
-    "攻击与施法速度提高 {0}%": "{0}% increased Attack and Cast Speed"
+    "攻击与施法速度提高 {0}%": "{0}% increased Attack and Cast Speed",
+    "每连锁弹射 {1} 个敌人，投射物伤害便提高 {0}%": "Projectiles deal {0}% increased Damage for each time they have Chained",
+    "每穿透 {1} 个敌人，投射物的伤害就提高 {0}%": "Projectiles deal {0}% increased Damage for each Enemy Pierced",
+    "此物品上装备的【诅咒技能石】等级 {0}": "{0} to Level of Socketed Curse Gems",
+    "{0} 近战打击范围":"{0} to Melee Strike Range"
 }

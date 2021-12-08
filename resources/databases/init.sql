@@ -66,6 +66,7 @@ INSERT INTO "requirement" ("k", "v") VALUES ('力量', 'Str');
 INSERT INTO "requirement" ("k", "v") VALUES ('敏捷', 'Dex');
 INSERT INTO "requirement" ("k", "v") VALUES ('智慧', 'Int');
 INSERT INTO "requirement" ("k", "v") VALUES ('(宝石)', '(gem)');
+INSERT INTO "requirement" ("k", "v") VALUES ('(珠宝)', '(jewel)');
 
 drop table property;
 CREATE TABLE "property" (
@@ -80,11 +81,14 @@ INSERT INTO "property" ("k", "v") VALUES ('品质（物理伤害和混沌伤害�
 INSERT INTO "property" ("k", "v") VALUES ('品质（生命和魔力词缀）', 'Quality (Life and Mana Modifiers)');
 INSERT INTO "property" ("k", "v") VALUES ('品质（元素伤害词缀）', 'Quality (Elemental Damage Modifiers)');
 INSERT INTO "property" ("k", "v") VALUES ('品质（抗性词缀）', 'Quality (Resistance Modifiers)');
-INSERT INTO "property" ("k", "v") VALUES ('品质（暴击词缀）', 'Quality (Caster Modifiers)');
+INSERT INTO "property" ("k", "v") VALUES ('品质（暴击词缀）', 'Quality (Critical Modifiers)');
+INSERT INTO "property" ("k", "v") VALUES ('品质（施法词缀）', 'Quality (Caster Modifiers)');
+INSERT INTO "property" ("k", "v") VALUES ('品质（防御词缀）', 'Quality (Defence Modifiers)');
 INSERT INTO "property" ("k", "v") VALUES ('{1} 秒内回复 {0} 生命', 'Recovers {0} Life over {1} Seconds');
 INSERT INTO "property" ("k", "v") VALUES ('{1} 秒内回复 {0} 魔力', 'Recovers {0} Mana over {1} Seconds');
 INSERT INTO "property" ("k", "v") VALUES ('每次使用会从 {1} 充能次数中消耗 {0} 次', 'Consumes {0} of {1} Charges on use');
 INSERT INTO "property" ("k", "v") VALUES ('物理伤害', 'Physical Damage');
+INSERT INTO "property" ("k", "v") VALUES ('混沌伤害', 'Chaos Damage');
 INSERT INTO "property" ("k", "v") VALUES ('能量护盾', 'Energy Shield');
 INSERT INTO "property" ("k", "v") VALUES ('武器范围', 'Weapon Range');
 INSERT INTO "property" ("k", "v") VALUES ('持续 {0} 秒', 'Lasts {0} Seconds');
@@ -107,6 +111,16 @@ INSERT INTO "property" ("k", "v") VALUES ('战杖', 'Warstaff');
 INSERT INTO "property" ("k", "v") VALUES ('单手剑', 'One Handed Sword');
 INSERT INTO "property" ("k", "v") VALUES ('符文匕首', 'Rune Dagger');
 INSERT INTO "property" ("k", "v") VALUES ('法杖', 'Wand');
+INSERT INTO "property" ("k", "v") VALUES ('匕首', 'Dagger');
+INSERT INTO "property" ("k", "v") VALUES ('短杖', 'Sceptre');
+INSERT INTO "property" ("k", "v") VALUES ('爪', 'Claw');
+INSERT INTO "property" ("k", "v") VALUES ('单手锤', 'One Handed Mace');
+INSERT INTO "property" ("k", "v") VALUES ('单手斧', 'One Handed Axe');
+INSERT INTO "property" ("k", "v") VALUES ('鱼竿', 'Fishing Rod');
+INSERT INTO "property" ("k", "v") VALUES ('长杖', 'Staff');
+INSERT INTO "property" ("k", "v") VALUES ('双手斧', 'Two Handed Axe');
+INSERT INTO "property" ("k", "v") VALUES ('双手剑', 'Two Handed Sword');
+INSERT INTO "property" ("k", "v") VALUES ('双手锤', 'Two Handed Mace');
 INSERT INTO "property" ("k", "v") VALUES ('仅限', 'Limited to');
 
 drop table formulable_node;
@@ -149,3 +163,5 @@ INSERT INTO "repeated_modifier" ("k", "v") VALUES ('若你至少拥有 {1} 点�
 INSERT INTO "repeated_modifier" ("k", "v", "ctx") VALUES ('若你至少拥有 {1} 点敏捷，可以投掷地雷的技能就会最多额外投掷 {0} 个地雷', 'Skills which throw Mines throw up to {0} additional Mine if you have at least {1} Dexterity', '{"isSingle":true,"singleIndex":1}');
 INSERT INTO "repeated_modifier" ("k", "v") VALUES ('若你至少拥有 {1} 点智慧，可以放置地雷的技能就会最多额外投掷 {0} 个地雷', 'Skills which throw Mines throw up to {0} additional Mines if you have at least {1} Intelligence');
 INSERT INTO "repeated_modifier" ("k", "v", "ctx") VALUES ('若你至少拥有 {1} 点智慧，可以放置地雷的技能就会最多额外投掷 {0} 个地雷', 'Skills which throw Mines throw up to {0} additional Mine if you have at least {1} Intelligence', '{"isSingle":true,"singleIndex":1}');
+INSERT INTO "repeated_modifier" ("k", "v") VALUES ('被敌人击中后使其冰缓 {0} 秒，行动速度降低 {1}%', 'Chill Enemy for {0} seconds when Hit, reducing their Action Speed by {1}%');
+INSERT INTO "repeated_modifier" ("k", "v", "ctx") VALUES ('被敌人击中后使其冰缓 {0} 秒，行动速度降低 {1}%', 'Chill Enemy for {0} second when Hit, reducing their Action Speed by {1}%', '{"isSingle":true,"singleIndex":0}');

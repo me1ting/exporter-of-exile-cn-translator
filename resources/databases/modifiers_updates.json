@@ -41,5 +41,6 @@
     "有 1 个插槽": "Has 1 Socket",
     "有 {0} 个插槽": "Has {0} Sockets",
     "无法造成混沌伤害": "Deal no Chaos Damage",
-    "护甲提高 {0}":"{0} increased Armour"
+    "护甲提高 {0}%":"{0}% increased Armour",
+    "冷却回复速度提高 {0}%": "{0}% increased Cooldown Recovery Rate"
 }

@@ -1,7 +1,36 @@
 import {
     uniques, weapons, armour, accessories, flasks, gems, properties, requirements,
-    formulableNodes, modifiers, jewels, shouldBeTranlated
+    formulableNodes, modifiers, repeatedModifiers, jewels, shouldBeTranlated
 } from "./load-resources.js";
+
+export function getType(str) {
+    let val = weapons.get(str);//武器
+    if (val) {
+        return "weapon";
+    }
+    val = armour.get(str);//护甲
+    if (val) {
+        return "armour";
+    }
+
+    val = accessories.get(str);//配件
+    if (val) {
+        return "accessory";
+    }
+    val = flasks.get(str);//药剂
+    if (val) {
+        return "flask";
+    }
+    val = gems.get(str);//技能
+    if (val) {
+        return "gem";
+    }
+    val = jewels.get(str);//珠宝
+    if (val) {
+        return "jewel";
+    }
+    return "unknown";
+}
 
 /**
  * 翻译物品名字。
@@ -22,6 +51,7 @@ export function transName(str, baseType) {
             return "Timetwist";
         }
     }
+
     let val = uniques.get(str);
     // 对于所有非传奇名称，翻译的价值不大，目前使用占位符替代。
     // 直接返回占位符"xxx"，返回原始名称会显示乱码，返回空白字符串会报错。
@@ -32,8 +62,8 @@ export function transName(str, baseType) {
  * 翻译基础类型。
  * 
  * 存在重复项：
- * 丝绸手套 护甲 调用方通过icon区分
- * 龙骨细剑 武器 除了需求等级，没有任何区别，区分价值不大；由于需求等级又受到词缀影响，因此没法区分。
+ * 丝绸手套 护甲 调用方通过icon区分。
+ * 龙骨细剑 武器 除了需求等级，没有任何区别，区分价值不大。此外由于需求等级又受到词缀影响，因此没法区分。
  * 
  * @param {*} str 类型 
  * @returns 
@@ -52,7 +82,6 @@ export function transBaseType(str) {
     if (!val) {
         val = gems.get(str);//技能
     }
-
     if (!val) {
         val = jewels.get(str);//珠宝
     }
@@ -85,6 +114,11 @@ export function transProperty(str) {
     return val ? val : str;
 }
 
+/**
+ * 翻译需求。
+ * @param {*} str 
+ * @returns 
+ */
 export function transRequirement(str) {
     let val = requirements.get(str);
     if (!val) {
@@ -106,7 +140,7 @@ export function transRequirement(str) {
  * @param {*} str 
  * @returns 
  */
-export function transFormulableNode(str) {
+function transFormulableNode(str) {
     if (str === "电能之击") {
         if (confirm) {
             if (confirm("请手动确认天赋技能：电能之击\n\n点击确认选择：若你近期内感电任意敌人，则伤害提高30%...\n点击取消选择：武器造成的伤害穿透 8% 闪电抗性...")) {
@@ -177,36 +211,6 @@ export function transFormulableNode(str) {
     return val ? val : str;
 }
 
-
-
-export function transEnchantMod(str,context) {
-    return transModifier(str,context);
-}
-
-export function transExplicitMod(str,context) {
-    return transModifier(str);
-}
-
-export function transImplicitMod(str,context) {
-    return transModifier(str,context);
-}
-
-export function transCraftedMod(str,context) {
-    return transModifier(str,context);
-}
-
-export function transUtilityMod(str,context) {
-    return transModifier(str);
-}
-
-export function transFracturedMod(str,context) {
-    return transModifier(str);
-}
-
-export function transScourgeMods(str,context) {
-    return transModifier(str);
-}
-
 const ALLOCATE_CN = "配置 ";
 const ALLOCATE_EN = "Allocates ";
 const ADDED_SMALL_PASSIVE_SKILL_GRANT_CN = "增加的小天赋获得：";
@@ -215,14 +219,15 @@ const ADDED_SMALL_PASSIVE_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
 /**
  * 翻译词缀。
  * 存在重复词缀：
- * 1. 仅大小写不同，后端取一种
- * 2. 语义不同，其中一种在交易网站上查不到，后端取有效的那种
- * 3. 语义不同，两种皆有效，TODO
- * 4. 单复数语法导致的不同，1.只有一个参数，后端分别插入单、复数版本；2. 多个参数，前端hack处理
+ * 1. 仅大小写不同，后端取一种。
+ * 2. 语义不同，但其中一种在交易网站上查不到（可能是遗产或其它原因导致），后端取有效的那种。
+ * 3. 语义不同，两种皆有效，添加context解决。
+ * 4. 单复数语法导致的不同，1.只有一个参数，后端分别插入单、复数版本；2. 多个参数，添加context解决。
  * @param {*} str 
+ * @param {*} ctx 上下文
  * @returns 
  */
-function transModifier(str) {
+export function transModifier(str, ctx) {
     //项链附魔
     if (str.startsWith(ALLOCATE_CN)) {
         let node = str.substring(ALLOCATE_CN.length);
@@ -236,10 +241,10 @@ function transModifier(str) {
     }
 
     //复合词缀
-    if (str.includes('\n')){
+    if (str.includes('\n')) {
         let mods = str.split('\n')
         let buf = []
-        for (let mod of mods){
+        for (let mod of mods) {
             buf.push(transModifier(mod));
         }
 
@@ -248,12 +253,25 @@ function transModifier(str) {
 
     //精确匹配
     let result = modifiers.get(str);
+    if (!result) {
+        let results = repeatedModifiers.get(str);
+        if (results) {
+            result = chooseFromRepeats(results, ctx);
+        }
+    }
     if (result) {
         return result.toTplBody;
     }
 
     //解析匹配
     let m = Modifier.fromString(str);
+    result = transModifierObject(m);
+    if (result) {
+        return result;
+    }
+
+    //解析匹配，但将%作为参数内容
+    m = Modifier.fromStringWhenPercentInParams(str);
     result = transModifierObject(m);
     if (result) {
         return result;
@@ -267,9 +285,17 @@ function transModifier(str) {
     return str;
 }
 
-function transModifierObject(m) {
+function transModifierObject(m, ctx) {
     let tplBody = m.getTemplateBody();
     let t = modifiers.get(tplBody);
+    if (!t) {
+        let results = repeatedModifiers.get(tplBody);
+        if (results) {
+            let copy = Object.assign({}, ctx);
+            copy.params = m.params;
+            t = chooseFromRepeats(results, copy);
+        }
+    }
     if (t) {
         let toTplBody = t.toTplBody;
         let fromParams = t.fromParams;
@@ -283,6 +309,49 @@ function transModifierObject(m) {
         }
 
         return toTpl.render(mapping);
+    }
+}
+
+function chooseFromRepeats(results, ctx) {
+    //目前只假设重复项不超过两个，一个为默认，一个为特殊。
+    let defaultResult = null;
+    for (let r of results) {
+        if (ctxMatchs(r.ctx, ctx)) {
+            return r;
+        }
+        if (!r.ctx) {
+            defaultResult = r;
+        }
+    }
+
+    return defaultResult;
+}
+
+/**
+ * 匹配context，目前返回boolean，未来根据需求可以返回匹配的Rank值。
+ * @param {*} pattern 
+ * @param {*} target 
+ */
+function ctxMatchs(pattern, target) {
+    if (!pattern && !target) {
+        return true
+    }
+
+    if (!pattern || !target) {
+        return false
+    }
+
+    if (pattern.types && target.type) {
+        if (pattern.types.includes(target.type)) {
+            return true;
+        }
+    }
+
+    if (pattern.isSingle) {
+        let sigleParamIndex = pattern.singleIndex;
+        if (target.params && parseInt(target.params[sigleParamIndex]) === 1) {
+            return true;
+        }
     }
 }
 
@@ -339,6 +408,46 @@ class Modifier {
 
         if (str) {
             let pattern = /(\+|-)?[\d&&\.]+/g;
+            let len = str.length;
+
+            let lastIndex = 0;
+
+            while (true) {
+                let match = pattern.exec(str);
+                if (match) {
+                    let result = match[0];
+                    let index = match.index;
+                    if (lastIndex !== index) {
+                        segments.push(new Segment(STR_SEGMENT, str.substring(lastIndex, index), null));
+                    }
+
+                    segments.push(new Segment(PARAM_SEGMENT, null, params.length));
+                    params.push(result);
+                    lastIndex = pattern.lastIndex;
+                } else {
+                    if (lastIndex < len) {
+                        segments.push(new Segment(1, str.substring(lastIndex), null, null));
+                    }
+                    break;
+                }
+            }
+        }
+
+        return new Modifier(segments, params);
+    }
+
+    /**
+     * 从代码严谨度来讲，应当将“%”作为模板主体的内容，从而有效区分模板，避免各种模糊性
+     * 但是由于目前的底层数据库的词缀部分完全依赖POECharm项目，许多词缀都将%作为参数内容，因此只能兼容。
+     * @param {*} str 
+     * @returns 
+     */
+    static fromStringWhenPercentInParams(str) {
+        let segments = [];
+        let params = [];
+
+        if (str) {
+            let pattern = /(\+|-)?[\d&&\.]+%?/g;
             let len = str.length;
 
             let lastIndex = 0;

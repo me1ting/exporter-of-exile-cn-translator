@@ -1,7 +1,5 @@
 import {
-    transName, transBaseType, transProperty, transRequirement, transEnchantMod, transExplicitMod,
-    transImplicitMod, transCraftedMod, transUtilityMod, transFracturedMod, transScourgeMods,
-    transGem, transGemProperty
+    getType, transName, transBaseType, transProperty, transRequirement, transModifier, transGem, transGemProperty
 } from './resources.js';
 
 export function translateItems(data) {
@@ -26,6 +24,9 @@ export function translateItems(data) {
 }
 
 export function translateItem(item) {
+    let ctx = {};
+    ctx.type = getType(item.baseType);
+
     if (item.name) {
         item.name = transName(item.name, item.baseType);
     }
@@ -46,7 +47,7 @@ export function translateItem(item) {
     }
 
     // 一般情况下，baseType === typeLine。
-    // 蓝色药剂比较特殊，typeLine === 修饰词+baseType，因此使用翻译后的baseType替代。
+    // 稀有药剂比较特殊，typeLine === 修饰词+baseType，因此使用翻译后的baseType替代。
     item.typeLine = item.baseType;
 
 
@@ -76,48 +77,48 @@ export function translateItem(item) {
     if (item.enchantMods) {
         for (let i = 0; i < item.enchantMods.length; i++) {
             let m = item.enchantMods[i];
-            item.enchantMods[i] = transEnchantMod(m);
+            item.enchantMods[i] = transModifier(m, ctx);
         }
     }
 
     if (item.explicitMods) {
         for (let i = 0; i < item.explicitMods.length; i++) {
             let m = item.explicitMods[i];
-            item.explicitMods[i] = transExplicitMod(m);
+            item.explicitMods[i] = transModifier(m, ctx);
         }
     }
 
     if (item.implicitMods) {
         for (let i = 0; i < item.implicitMods.length; i++) {
             let m = item.implicitMods[i];
-            item.implicitMods[i] = transImplicitMod(m);
+            item.implicitMods[i] = transModifier(m, ctx);
         }
     }
 
     if (item.craftedMods) {
         for (let i = 0; i < item.craftedMods.length; i++) {
             let m = item.craftedMods[i];
-            item.craftedMods[i] = transCraftedMod(m);
+            item.craftedMods[i] = transModifier(m, ctx);
         }
     }
 
     if (item.utilityMods) {
         for (let i = 0; i < item.utilityMods.length; i++) {
             let m = item.utilityMods[i];
-            item.utilityMods[i] = transUtilityMod(m);
+            item.utilityMods[i] = transModifier(m, ctx);
         }
     }
 
     if (item.fracturedMods) {
         for (let i = 0; i < item.fracturedMods.length; i++) {
             let m = item.fracturedMods[i];
-            item.fracturedMods[i] = transFracturedMod(m);
+            item.fracturedMods[i] = transModifier(m, ctx);
         }
     }
     if (item.scourgeMods) {
         for (let i = 0; i < item.scourgeMods.length; i++) {
             let m = item.scourgeMods[i];
-            item.scourgeMods[i] = transScourgeMods(m);
+            item.scourgeMods[i] = transModifier(m, ctx);
         }
     }
 

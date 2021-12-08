@@ -217,6 +217,50 @@ def parseTemplate(t):
 
     return ''.join(buf), params
 
+
+# repeated-modifiers.js
+def generate_repeated_modifiers():
+    con = sqlite3.connect('databases/translations.db')
+    cur = con.cursor()
+    rows = cur.execute(
+        'select k,v,ctx from repeated_modifier').fetchall()
+    con.close()
+
+    # 为了方便前端使用，需要将词缀模板进行处理：
+    # - 将模板拆分为模板主体和形式参数列表两个部分
+    formattedRows = []
+
+    for r in rows:
+        k = r[0]
+        v = r[1]
+        ctx = r[2]
+
+        if ctx:
+            ctx = json.loads(ctx)
+        else:
+            ctx = None
+
+        fromTplBody, fromParams = parseTemplate(k)
+        toTplBody, toParams = parseTemplate(v)
+
+        formattedRows.append(
+            (fromTplBody, {"fromParams": fromParams, "toTplBody": toTplBody, "toParams": toParams, "ctx": ctx}))
+
+    rows = formattedRows
+
+    data = {}
+
+    for r in rows:
+        k = r[0]
+        v = r[1]
+        if k in data:
+            data[k].append(v)
+        else:
+            data[k] = [r[1]]
+
+    save_dict_as_javascript('./repeated-modifiers.js', data, 'repeatedModifiers')
+
+
 # jewels.json
 
 
@@ -253,4 +297,5 @@ generate_requirements()
 generate_properties()
 generate_formulable_nodes()
 generate_modifiers()
+generate_repeated_modifiers()
 generate_jewels()

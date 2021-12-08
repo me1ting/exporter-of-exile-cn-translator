@@ -2,9 +2,12 @@
     "你造成暴击时有 {0}% 的几率获得一次药剂充能": "{0}% chance to gain a Flask Charge when you deal a Critical Strike",
     "附加 {0} - {1} 基础火焰伤害": "Adds {0} to {1} Fire Damage",
     "你的法术每击中 {1} 个敌人会回复 {0} 魔力": "{0} Mana gained for each Enemy Hit by your Spells",
-    "生效时间缩短 {0}%":"{0}% reduced Duration",
-    "生效时间延长 {0}":"{0} increased Duration",
-    "持弓类施放法术时触发一个插入的弓类技能，它有{0} 秒冷却时间":"Trigger a Socketed Bow Skill when you Cast a Spell while wielding a Bow, with a {0} second Cooldown",
-    "暴击率提高 {0}":"{0} increased Critical Strike Chance",
-    "能量护盾充能时间提前 {0}":"{0} faster start of Energy Shield Recharge"
+    "生效时间缩短 {0}%": "{0}% reduced Duration",
+    "生效时间延长 {0}%": "{0} increased Duration",
+    "持弓类施放法术时触发一个插入的弓类技能，它有{0} 秒冷却时间": "Trigger a Socketed Bow Skill when you Cast a Spell while wielding a Bow, with a {0} second Cooldown",
+    "暴击率提高 {0}%": "{0}% increased Critical Strike Chance",
+    "能量护盾充能时间提前 {0}": "{0} faster start of Energy Shield Recharge",
+    "伤害提高 {0}%": "{0}% increased Damage",
+    "移动速度提高 {0}%": "{0}% increased Movement Speed",
+    "攻击与施法速度提高 {0}%": "{0}% increased Attack and Cast Speed"
 }

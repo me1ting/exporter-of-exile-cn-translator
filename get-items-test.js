@@ -15,9 +15,9 @@ try {
     const content = await readFileHandle.readFile();
     let data = JSON.parse(content);
     translateItems(data);
-    writeFileHandle = await open(readPath + ".transalted.json", "w+");
-    await writeFileHandle.writeFile(JSON.stringify(data));
+    //writeFileHandle = await open(readPath + ".transalted.json", "w+");
+    //await writeFileHandle.writeFile(JSON.stringify(data));
 } finally {
-    await writeFileHandle?.close();
+    //await writeFileHandle?.close();
     await readFileHandle?.close();
 }

@@ -9,6 +9,7 @@ export { requirements } from "./resources/requirements.js";
 export { formulableNodes } from "./resources/formulable-nodes.js";
 export { modifiers } from "./resources/modifiers.js";
 export { jewels } from "./resources/jewels.js";
+export {repeatedModifiers} from "./resources/repeated-modifiers.js";
 
 export function shouldBeTranlated(target) {
     console.log("should be translated: " + target.type + "," + target.content);

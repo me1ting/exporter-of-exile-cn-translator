@@ -146,6 +146,7 @@ def init_gems():
     rows.append(['持续时间缩短（辅）','Less Duration'])
     rows.append(['弹幕','Barrage'])
     rows.append(['提高暴击几率（辅）','Increased Critical Strikes'])
+    rows.append(['持续时间延长（辅）','Increased Duration'])
     # 覆盖
     rows.append(['低阶毒化（辅）','Chance to Poison'])
     rows.append(['毒化（辅）','Critical Strike Affliction'])

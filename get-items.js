@@ -1,4 +1,3 @@
-import { properties } from './load-resources.js';
 import {
     transName, transBaseType, transProperty, transRequirement, transEnchantMod, transExplicitMod,
     transImplicitMod, transCraftedMod, transUtilityMod, transFracturedMod, transScourgeMods,
@@ -27,35 +26,21 @@ export function translateItems(data) {
 }
 
 export function translateItem(item) {
-    //无用字段，对POB没有任何影响，这里删除只是为了减少最终Code的大小
-    if (item.icon) {
-        item.icon = "";
-    }
-    if (item.secDescrText) {
-        item.secDescrText = "";
-    }
-    if (item.descrText) {
-        item.descrText = "";
-    }
-    if (item.flavourText) {
-        item.flavourText = [];
-    }
-
     if (item.name) {
         item.name = transName(item.name, item.baseType);
     }
 
     if (item.baseType) {
         //硬编码处理重复项。
-        if(item.baseType === "丝绸手套"){
-            if (item.icon.endsWith("GlovesInt3.png")){
+        if (item.baseType === "丝绸手套") {
+            if (item.icon.endsWith("GlovesInt3.png")) {
                 item.baseType = "Silk Gloves";
-            }else if(item.icon.endsWith("FingerlessSilkGloves.png")){
+            } else if (item.icon.endsWith("FingerlessSilkGloves.png")) {
                 item.baseType = "Fingerless Silk Gloves";
-            }else{
+            } else {
                 console.log("error: unreachable code");
             }
-        }else{
+        } else {
             item.baseType = transBaseType(item.baseType, getLevelRequirements(item));
         }
     }
@@ -148,6 +133,21 @@ export function translateItem(item) {
             }
 
         }
+    }
+
+    //无用字段，对POB没有任何影响，这里删除只是为了减少最终Code的大小
+    //放最后才清理，是因为前面的逻辑可能会用到这些字段
+    if (item.icon) {
+        item.icon = "";
+    }
+    if (item.secDescrText) {
+        item.secDescrText = "";
+    }
+    if (item.descrText) {
+        item.descrText = "";
+    }
+    if (item.flavourText) {
+        item.flavourText = [];
     }
 }
 

@@ -177,12 +177,52 @@ export function transFormulableNode(str) {
     return val ? val : str;
 }
 
+
+
+export function transEnchantMod(str,context) {
+    return transModifier(str,context);
+}
+
+export function transExplicitMod(str,context) {
+    return transModifier(str);
+}
+
+export function transImplicitMod(str,context) {
+    return transModifier(str,context);
+}
+
+export function transCraftedMod(str,context) {
+    return transModifier(str,context);
+}
+
+export function transUtilityMod(str,context) {
+    return transModifier(str);
+}
+
+export function transFracturedMod(str,context) {
+    return transModifier(str);
+}
+
+export function transScourgeMods(str,context) {
+    return transModifier(str);
+}
+
 const ALLOCATE_CN = "配置 ";
 const ALLOCATE_EN = "Allocates ";
-const ADDED_SMALL_Passive_SKILL_GRANT_CN = "增加的小天赋获得：";
-const ADDED_SMALL_Passive_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
+const ADDED_SMALL_PASSIVE_SKILL_GRANT_CN = "增加的小天赋获得：";
+const ADDED_SMALL_PASSIVE_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
 
-export function transEnchantMod(str) {
+/**
+ * 翻译词缀。
+ * 存在重复词缀：
+ * 1. 仅大小写不同，后端取一种
+ * 2. 语义不同，其中一种在交易网站上查不到，后端取有效的那种
+ * 3. 语义不同，两种皆有效，TODO
+ * 4. 单复数语法导致的不同，1.只有一个参数，后端分别插入单、复数版本；2. 多个参数，前端hack处理
+ * @param {*} str 
+ * @returns 
+ */
+function transModifier(str) {
     //项链附魔
     if (str.startsWith(ALLOCATE_CN)) {
         let node = str.substring(ALLOCATE_CN.length);
@@ -190,40 +230,23 @@ export function transEnchantMod(str) {
     }
 
     //星团珠宝特殊词缀
-    if (str.startsWith(ADDED_SMALL_Passive_SKILL_GRANT_CN)) {
-        let granted = str.substring(ADDED_SMALL_Passive_SKILL_GRANT_CN.length);
-        return ADDED_SMALL_Passive_SKILL_GRANT_EN + transModifier(granted);
+    if (str.startsWith(ADDED_SMALL_PASSIVE_SKILL_GRANT_CN)) {
+        let granted = str.substring(ADDED_SMALL_PASSIVE_SKILL_GRANT_CN.length);
+        return ADDED_SMALL_PASSIVE_SKILL_GRANT_EN + transModifier(granted);
     }
 
-    return transModifier(str);
-}
+    //复合词缀
+    if (str.includes('\n')){
+        let mods = str.split('\n')
+        let buf = []
+        for (let mod of mods){
+            buf.push(transModifier(mod));
+        }
 
-export function transExplicitMod(str) {
-    return transModifier(str);
-}
+        return buf.join('\n');
+    }
 
-export function transImplicitMod(str) {
-    return transModifier(str);
-}
-
-export function transCraftedMod(str) {
-    return transModifier(str);
-}
-
-export function transUtilityMod(str) {
-    return transModifier(str);
-}
-
-export function transFracturedMod(str) {
-    return transModifier(str);
-}
-
-export function transScourgeMods(str) {
-    return transModifier(str);
-}
-
-function transModifier(str) {
-    //整体匹配
+    //精确匹配
     let result = modifiers.get(str);
     if (result) {
         return result.toTplBody;
@@ -231,14 +254,7 @@ function transModifier(str) {
 
     //解析匹配
     let m = Modifier.fromString(str);
-    result = transModifierInObject(m);
-    if (result) {
-        return result;
-    }
-
-    //解析匹配，但%作为模板主题的部分。
-    m = Modifier.fromStringButParamsWithoutPercent(str);
-    result = transModifierInObject(m);
+    result = transModifierObject(m);
     if (result) {
         return result;
     }
@@ -251,7 +267,7 @@ function transModifier(str) {
     return str;
 }
 
-function transModifierInObject(m) {
+function transModifierObject(m) {
     let tplBody = m.getTemplateBody();
     let t = modifiers.get(tplBody);
     if (t) {
@@ -270,21 +286,6 @@ function transModifierInObject(m) {
     }
 }
 
-function chooseTheBestOne(transaltions, params) {
-    if (transaltions.length > 1) {
-        //一般情况下，存在参数1时，使用单数模板
-        let mayNeedOddVersion = params.includes("1");
-        if (mayNeedOddVersion) {
-            for (let t of transaltions) {
-                if (mayNeedOddVersion && t.fromParams.length > t.toParams.length) {
-                    return t;
-                }
-            }
-        }
-    }
-    return transaltions[0];
-}
-
 export function transGem(str) {
     let gem = Gem.fromString(str);
     let val = gems.get(gem.name);
@@ -298,9 +299,11 @@ export function transGem(str) {
 
     let buf = [];
     if (gem.qualityType === GEM_QUALITY_TYPE_DIVERGENT) {
-        buf.push(GEM_PREFFIX_DIVERGENT_EN);
+        buf.push(GEM_PREFIX_DIVERGENT_EN);
     } else if (gem.qualityType === GEM_QUALITY_TYPE_ANOMALOUS) {
-        buf.push(GEM_PREFFIX_ANOMALOUS_EN);
+        buf.push(GEM_PREFIX_ANOMALOUS_EN);
+    } else if (gem.qualityType === GEM_QUALITY_TYPE_PHANTASMAL) {
+        buf.push(GEM_PREFIX_PHANTASMAL_EN);
     }
     buf.push(val);
     if (gem.isSupport) {
@@ -325,47 +328,12 @@ class Modifier {
         this.segments = segments;
         this.params = params;
     }
-    static fromString(str) {
-        let segments = [];
-        let params = [];
-
-        if (str) {
-            //目前的正则不够精细，必要时可以增加预匹配，来保证两端空格（如果位于开始、结尾会少一边空格）。
-            let pattern = /(\+|-)?[\d&&\.]+%?/g;
-            let len = str.length;
-
-            let lastIndex = 0;
-
-            while (true) {
-                let match = pattern.exec(str);
-                if (match) {
-                    let result = match[0];
-                    let index = match.index;
-                    if (lastIndex !== index) {
-                        segments.push(new Segment(STR_SEGMENT, str.substring(lastIndex, index), null));
-                    }
-
-                    segments.push(new Segment(PARAM_SEGMENT, null, params.length));
-                    params.push(result);
-                    lastIndex = pattern.lastIndex;
-                } else {
-                    if (lastIndex < len) {
-                        segments.push(new Segment(1, str.substring(lastIndex), null, null));
-                    }
-                    break;
-                }
-            }
-        }
-
-        return new Modifier(segments, params);
-    }
 
     /**
-     * 构建词缀，但是%作为模板内容而非参数内容。
      * @param {*} str 
      * @returns 
      */
-    static fromStringButParamsWithoutPercent(str) {
+    static fromString(str) {
         let segments = []
         let params = []
 
@@ -536,14 +504,17 @@ class Segment {
 const GEM_QUALITY_TYPE_NORMAL = 0;
 const GEM_QUALITY_TYPE_DIVERGENT = 1;
 const GEM_QUALITY_TYPE_ANOMALOUS = 2;
+const GEM_QUALITY_TYPE_PHANTASMAL = 3;
 const GEM_SUFFIX_SUPPORT_CN = "（辅）";
 const GEM_SUFFIX_AWAKENED_SUPPORT_CN = "（强辅）";
 //必须带空格，因为存在特例：“异常爆发(辅)”
-const GEM_PREFFIX_DIVERGENT_CN = "分歧 ";
-const GEM_PREFFIX_ANOMALOUS_CN = "异常 ";
+const GEM_PREFIX_DIVERGENT_CN = "分歧 ";
+const GEM_PREFIX_ANOMALOUS_CN = "异常 ";
+const GEM_PREFIX_PHANTASMAL_CN = "魅影 ";
 const GEM_SUFFIX_SUPPORT_EN = "Support";
-const GEM_PREFFIX_DIVERGENT_EN = "Divergent";
-const GEM_PREFFIX_ANOMALOUS_EN = "Anomalous";
+const GEM_PREFIX_DIVERGENT_EN = "Divergent";
+const GEM_PREFIX_ANOMALOUS_EN = "Anomalous";
+const GEM_PREFIX_PHANTASMAL_EN = "Phantasmal";
 
 class Gem {
     constructor(name, isSupport, isAwakened, qualityType) {
@@ -557,12 +528,15 @@ class Gem {
         str = str.replace('(', '（').replace(')', '）');
 
         let qualityType = GEM_QUALITY_TYPE_NORMAL;
-        if (str.startsWith(GEM_PREFFIX_DIVERGENT_CN)) {
+        if (str.startsWith(GEM_PREFIX_DIVERGENT_CN)) {
             qualityType = GEM_QUALITY_TYPE_DIVERGENT;
-            str = str.substring(GEM_PREFFIX_DIVERGENT_CN.length).trim();
-        } else if (str.startsWith(GEM_PREFFIX_ANOMALOUS_CN)) {
+            str = str.substring(GEM_PREFIX_DIVERGENT_CN.length).trim();
+        } else if (str.startsWith(GEM_PREFIX_ANOMALOUS_CN)) {
             qualityType = GEM_QUALITY_TYPE_ANOMALOUS;
-            str = str.substring(GEM_PREFFIX_ANOMALOUS_CN.length).trim();
+            str = str.substring(GEM_PREFIX_ANOMALOUS_CN.length).trim();
+        } else if (str.startsWith(GEM_PREFIX_PHANTASMAL_CN)) {
+            qualityType = GEM_QUALITY_TYPE_PHANTASMAL;
+            str = str.substring(GEM_PREFIX_PHANTASMAL_CN.length).trim();
         }
 
         let isSupport = false;

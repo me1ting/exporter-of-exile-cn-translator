@@ -1,14 +1,31 @@
 import {
-    uniques, weapons, armour, accessories, flasks, gems, properties, requirements,
-    formulableNodes, modifiers, repeatedModifiers, jewels, shouldBeTranlated
+    uniques, repeatedUniques, weapons, repeatedWeapons, armour, accessories, flasks, gems, properties, requirements,
+    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, shouldBeTranlated
 } from "./load-resources.js";
 
+/**
+ * 获取物品名称对应的基本类型（EN）。
+ * 有以下类型：weapon,armour,accessory,flask,gem,jewel
+ * 分别表示：武器，护甲，饰品，药剂，宝石，珠宝
+ * 如果无法判定类型，返回"unkonwn"
+ * 
+ * 
+ * @param {*} str 
+ * @returns 
+ */
 export function getType(str) {
     let val = weapons.get(str);//武器
+    if (!val) {
+        val = repeatedWeapons.get(val);
+    }
     if (val) {
         return "weapon";
     }
+
     val = armour.get(str);//护甲
+    if (!val) {
+        val = repeatedWeapons.get(val);
+    }
     if (val) {
         return "armour";
     }
@@ -35,65 +52,89 @@ export function getType(str) {
 /**
  * 翻译物品名字。
  * 
- * 存在重复项：
- * 时空扭曲 通过baseType区分
+ * 重复项 区分方式
+ * 时空扭曲 baseType（CN）
  * 
  * @param {*} str 物品名称
- * @param {*} baseType 物品基础类型，用于区分重复的传奇名称。
+ * @param {*} ctx 上下文，用于区分重复项。
  * @returns 
  */
-export function transName(str, baseType) {
-    //存在重复的传奇名称，这里作硬编码处理。
-    if (str === "时空扭曲") {
-        if (baseType === "青玉护身符") {
-            return "Warped Timepiece";
-        } else if (baseType === "月光石戒指") {
-            return "Timetwist";
+export function transName(str, ctx) {
+    let val = uniques.get(str);
+    if (val) {
+        return val;
+    }
+    let vals = repeatedUniques.get(str);
+    if (vals) {
+        for (let val of vals) {
+            if (val.ctx && val.ctx.baseType === ctx.baseType) {
+                return val.v;
+            }
         }
     }
 
-    let val = uniques.get(str);
     // 对于所有非传奇名称，翻译的价值不大，目前使用占位符替代。
-    // 直接返回占位符"xxx"，返回原始名称会显示乱码，返回空白字符串会报错。
-    return val ? val : "xxx";
+    // 返回占位符"Item"，返回原始名称会显示乱码，返回空白字符串会报错。
+    return "Item";
 }
 
 /**
  * 翻译基础类型。
  * 
- * 存在重复项：
- * 丝绸手套 护甲 调用方通过icon区分。
- * 龙骨细剑 武器 除了需求等级，没有任何区别，区分价值不大。此外由于需求等级又受到词缀影响，因此没法区分。
+ * 重复项：
+ * 丝绸手套 护甲 调用方自行通过icon区分（因为是暗金，必须区分）
+ * 龙骨细剑 武器 无法区分，也无必要区分（目前没有对应的暗金）
  * 
- * @param {*} str 类型 
+ * @param {*} str 基础类型 
  * @returns 
  */
 export function transBaseType(str) {
     let val = weapons.get(str);//武器
-    if (!val) {
-        val = armour.get(str);//护甲
+    if (val) {
+        return val;
     }
-    if (!val) {
-        val = accessories.get(str);//配件
-    }
-    if (!val) {
-        val = flasks.get(str);//药剂
-    }
-    if (!val) {
-        val = gems.get(str);//技能
-    }
-    if (!val) {
-        val = jewels.get(str);//珠宝
+    let vals = repeatedWeapons.get(str);
+    if (vals && vals.length > 0) {
+        //目前只有 "龙骨细剑" 且无法区分，且不需要区分，返回任意一个即可。
+        return vals[0].v;
     }
 
-    if (!val) {
-        shouldBeTranlated({
-            "type": "baseType",
-            "content": str
-        });
+    val = armour.get(str);//护甲
+    if (val) {
+        return val;
     }
 
-    return val ? val : str;
+    val = accessories.get(str);//配件
+    if (val) {
+        return val;
+    }
+
+    val = flasks.get(str);//药剂
+    if (val) {
+        return val;
+    }
+
+    val = accessories.get(str);//配件
+    if (val) {
+        return val;
+    }
+
+    val = gems.get(str);//技能
+    if (val) {
+        return val;
+    }
+
+    val = jewels.get(str);//珠宝
+    if (val) {
+        return val;
+    }
+
+    shouldBeTranlated({
+        "type": "baseType",
+        "content": str
+    });
+
+    return str;
 }
 
 /**
@@ -103,15 +144,16 @@ export function transBaseType(str) {
  */
 export function transProperty(str) {
     let val = properties.get(str);
-
-    if (!val) {
-        shouldBeTranlated({
-            "type": "property",
-            "content": str
-        });
+    if (val) {
+        return val;
     }
 
-    return val ? val : str;
+    shouldBeTranlated({
+        "type": "property",
+        "content": str
+    });
+
+    return str;
 }
 
 /**
@@ -121,13 +163,16 @@ export function transProperty(str) {
  */
 export function transRequirement(str) {
     let val = requirements.get(str);
-    if (!val) {
-        shouldBeTranlated({
-            "type": "requirement",
-            "content": str
-        });
+    if (val) {
+        return val;
     }
-    return val ? val : str;
+
+    shouldBeTranlated({
+        "type": "requirement",
+        "content": str
+    });
+
+    return str;
 }
 
 /**
@@ -141,74 +186,46 @@ export function transRequirement(str) {
  * @returns 
  */
 function transFormulableNode(str) {
-    if (str === "电能之击") {
-        if (confirm) {
-            if (confirm("请手动确认天赋技能：电能之击\n\n点击确认选择：若你近期内感电任意敌人，则伤害提高30%...\n点击取消选择：武器造成的伤害穿透 8% 闪电抗性...")) {
-                return "Static Blows";
-            } else {
-                return "Arcing Blows";
-            }
-        } else {
-            console.log("skip passive skill: ", str);
-        }
-    }
-
-    if (str === "毁灭装置") {
-        if (confirm) {
-            if (confirm("请手动确认天赋技能：毁灭装置\n\n点击确认选择：地雷持续时间延长 60%...\n点击取消选择：地雷暴击率提高 50%...")) {
-                return "Destructive Apparatus";
-            } else {
-                return "Devastating Devices";
-            }
-        } else {
-            console.log("skip passive skill: ", str);
-        }
-    }
-
-    if (str === "毒蛇之牙") {
-        if (confirm) {
-            if (confirm("请手动确认天赋技能：毒蛇之牙\n\n点击确认选择：地雷持续时间延长 60%...\n点击取消选择：地雷暴击率提高 50%...")) {
-                return "Adder's Touch";
-            } else {
-                return "Fangs of the Viper";
-            }
-        } else {
-            console.log("skip passive skill: ", str);
-        }
-    }
-
-    if (str === "英勇") {
-        if (confirm) {
-            if (confirm("请手动确认天赋技能：英勇\n\n点击确认选择：闪避值与护甲提高 24%...\n点击取消选择：+30 力量...")) {
-                return "Bravery";
-            } else {
-                return "Prowess";
-            }
-        } else {
-            console.log("skip passive skill: ", str);
-        }
-    }
-
-    if (str === "汲血者") {
-        if (confirm) {
-            if (confirm("请手动确认天赋技能：汲血者\n\n点击确认选择：生命上限提高 10%...\n点击取消选择：攻击速度提高 12%...")) {
-                return "Blood Drinker";
-            } else {
-                return "Lust for Carnage";
-            }
-        } else {
-            console.log("skip passive skill: ", str);
-        }
-    }
-
     let val = formulableNodes.get(str);
-    if (!val) {
-        shouldBeTranlated({
-            "type": "formulableNode",
-            "content": str
-        });
+    if (val) {
+        return val;
     }
-    return val ? val : str;
+
+    let vals = repeatedFormulableNodes.get(str);
+    if (vals && vals.length > 0) {
+        if (prompt) {
+            let choice = -1;
+
+            let promptTextBuf = [`请根据描述确认重复的天赋技能（输入选择的序号）：${str}\n`];
+            let index = 0;
+            for (let val of vals) {
+                promptTextBuf.push(`    ${index}: ${val.stats[0]}...\n`);
+                index += 1;
+            }
+            let promptText = promptTextBuf.join();
+
+            while (choice < 0 || choice >= vals.length) {
+                let input = prompt(promptText);
+                choice = parseInt(input);
+                if (isNaN(choice) || isFinite(choice)) {
+                    choice = -1;
+                }
+            }
+
+            return vals[choice].v;
+        } else {
+            //node.js 环境下直接返回原字符串
+            return str;
+        }
+    }
+
+
+    shouldBeTranlated({
+        "type": "formulableNode",
+        "content": str
+    });
+
+    return str;
 }
 
 const ALLOCATE_CN = "配置 ";
@@ -228,7 +245,7 @@ const ADDED_SMALL_PASSIVE_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
  * @returns 
  */
 export function transModifier(str, ctx) {
-    //项链附魔
+    //附魔
     if (str.startsWith(ALLOCATE_CN)) {
         let node = str.substring(ALLOCATE_CN.length);
         return ALLOCATE_EN + transFormulableNode(node);
@@ -270,13 +287,6 @@ export function transModifier(str, ctx) {
         return result;
     }
 
-    //解析匹配，但将%作为参数内容
-    m = Modifier.fromStringWhenPercentInParams(str);
-    result = transModifierObject(m);
-    if (result) {
-        return result;
-    }
-
     shouldBeTranlated({
         "type": "modifier",
         "content": str
@@ -313,7 +323,6 @@ function transModifierObject(m, ctx) {
 }
 
 function chooseFromRepeats(results, ctx) {
-    //目前只假设重复项不超过两个，一个为默认，一个为特殊。
     let defaultResult = null;
     for (let r of results) {
         if (ctxMatchs(r.ctx, ctx)) {
@@ -359,27 +368,29 @@ export function transGem(str) {
     let gem = Gem.fromString(str);
     let val = gems.get(gem.name);
 
-    if (!val) {
-        shouldBeTranlated({
-            "type": "gem",
-            "content": str
-        });
+    if (val) {
+        let buf = [];
+        if (gem.qualityType === GEM_QUALITY_TYPE_DIVERGENT) {
+            buf.push(GEM_PREFIX_DIVERGENT_EN);
+        } else if (gem.qualityType === GEM_QUALITY_TYPE_ANOMALOUS) {
+            buf.push(GEM_PREFIX_ANOMALOUS_EN);
+        } else if (gem.qualityType === GEM_QUALITY_TYPE_PHANTASMAL) {
+            buf.push(GEM_PREFIX_PHANTASMAL_EN);
+        }
+        buf.push(val);
+        if (gem.isSupport) {
+            buf.push(GEM_SUFFIX_SUPPORT_EN);
+        }
+
+        return buf.join(" ");
     }
 
-    let buf = [];
-    if (gem.qualityType === GEM_QUALITY_TYPE_DIVERGENT) {
-        buf.push(GEM_PREFIX_DIVERGENT_EN);
-    } else if (gem.qualityType === GEM_QUALITY_TYPE_ANOMALOUS) {
-        buf.push(GEM_PREFIX_ANOMALOUS_EN);
-    } else if (gem.qualityType === GEM_QUALITY_TYPE_PHANTASMAL) {
-        buf.push(GEM_PREFIX_PHANTASMAL_EN);
-    }
-    buf.push(val);
-    if (gem.isSupport) {
-        buf.push(GEM_SUFFIX_SUPPORT_EN);
-    }
+    shouldBeTranlated({
+        "type": "gem",
+        "content": str
+    });
 
-    return buf.join(" ");
+    return str;
 }
 
 export function transGemProperty(str) {
@@ -408,46 +419,6 @@ class Modifier {
 
         if (str) {
             let pattern = /(\+|-)?[\d&&\.]+/g;
-            let len = str.length;
-
-            let lastIndex = 0;
-
-            while (true) {
-                let match = pattern.exec(str);
-                if (match) {
-                    let result = match[0];
-                    let index = match.index;
-                    if (lastIndex !== index) {
-                        segments.push(new Segment(STR_SEGMENT, str.substring(lastIndex, index), null));
-                    }
-
-                    segments.push(new Segment(PARAM_SEGMENT, null, params.length));
-                    params.push(result);
-                    lastIndex = pattern.lastIndex;
-                } else {
-                    if (lastIndex < len) {
-                        segments.push(new Segment(1, str.substring(lastIndex), null, null));
-                    }
-                    break;
-                }
-            }
-        }
-
-        return new Modifier(segments, params);
-    }
-
-    /**
-     * 从代码严谨度来讲，应当将“%”作为模板主体的内容，从而有效区分模板，避免各种模糊性
-     * 但是由于目前的底层数据库的词缀部分完全依赖POECharm项目，许多词缀都将%作为参数内容，因此只能兼容。
-     * @param {*} str 
-     * @returns 
-     */
-    static fromStringWhenPercentInParams(str) {
-        let segments = [];
-        let params = [];
-
-        if (str) {
-            let pattern = /(\+|-)?[\d&&\.]+%?/g;
             let len = str.length;
 
             let lastIndex = 0;
@@ -593,14 +564,14 @@ const PARAM_SEGMENT = 2
 
 /*
     表示一个模板片段。
-
+ 
     type表示类型，包括：
     - STR_SEGMENT, 普通字符串
     - PARAM_SEGMENT, 参数
-
+ 
     content表示内容，只有字符串类型的才有内容。
     index只用于参数类型，表示其对应参数的索引。
-
+ 
  */
 class Segment {
     constructor(type, content, index) {

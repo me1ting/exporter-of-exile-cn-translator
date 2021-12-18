@@ -1,0 +1,1 @@
+export const repeatedArmour = new Map([["\u4e1d\u7ef8\u624b\u5957",[{"v": "Silk Gloves"}, {"v": "Fingerless Silk Gloves"}]],]);

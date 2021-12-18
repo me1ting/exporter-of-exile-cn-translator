@@ -26,15 +26,18 @@ export function translateItems(data) {
 export function translateItem(item) {
     let ctx = {};
     ctx.type = getType(item.baseType);
+    ctx.baseType = item.baseType;
 
     if (item.name) {
-        item.name = transName(item.name, item.baseType);
+        item.name = transName(item.name, ctx);
     }
 
     if (item.baseType) {
         //硬编码处理重复项。
         if (item.baseType === "丝绸手套") {
-            if (item.icon.endsWith("GlovesInt3.png")) {
+            //可能是原版图标，也可能是传奇图标
+            //根据传奇名称判断可能会漏判，因为瓦黄了不再是传奇名称但图标不变
+            if (item.icon.endsWith("GlovesInt3.png")||item.icon.endsWith("AsenathsGentleTouch.png")) {
                 item.baseType = "Silk Gloves";
             } else if (item.icon.endsWith("FingerlessSilkGloves.png")) {
                 item.baseType = "Fingerless Silk Gloves";
@@ -49,7 +52,6 @@ export function translateItem(item) {
     // 一般情况下，baseType === typeLine。
     // 稀有药剂比较特殊，typeLine === 修饰词+baseType，因此使用翻译后的baseType替代。
     item.typeLine = item.baseType;
-
 
     if (item.properties) {
         for (const p of item.properties) {

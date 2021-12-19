@@ -45,7 +45,7 @@ export function translateItem(item) {
                 console.log("error: unreachable code");
             }
         } else {
-            item.baseType = transBaseType(item.baseType, getLevelRequirements(item));
+            item.baseType = transBaseType(item.baseType);
         }
     }
 
@@ -152,17 +152,6 @@ export function translateItem(item) {
     if (item.flavourText) {
         item.flavourText = [];
     }
-}
-
-function getLevelRequirements(item) {
-    if (item && item.requirements) {
-        for (const r of item.requirements) {
-            if (r.name === "等级") {
-                return r.values[0];
-            }
-        }
-    }
-    return -1;
 }
 
 function translateGem(item) {

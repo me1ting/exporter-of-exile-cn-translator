@@ -22292,5 +22292,13 @@
     "命中值降低 {0}%": "{0}% reduced Global Accuracy Rating",
     "若你近期内没有施放过冲刺，则弓类攻击发射 {0} 枚额外箭矢": "Bow Attacks fire {0} additional Arrows if you haven't Cast Dash recently",
     "若你近期内没有施放过冲刺，则攻击速度加快 {0}%": "{0}% increased Attack Speed if you haven't Cast Dash recently",
-    "技能效果持续时间延长 {0}%": "{0}% increased Skill Effect Duration"
+    "技能效果持续时间延长 {0}%": "{0}% increased Skill Effect Duration",
+    "塑界之器": "Shaper Item",
+    "裂界之器": "Elder Item",
+    "督军物品": "Warlord Item",
+    "救赎者物品": "Redeemer Item",
+    "圣战者物品": "Crusader Item",
+    "狩猎者物品": "Hunter Item",
+    "已腐化": "Corrupted",
+    "天灾": "Scourged"
 }

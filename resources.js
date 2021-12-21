@@ -302,8 +302,15 @@ export function transModifier(str, ctx) {
     }
 
     //解析匹配
-    let m = Modifier.fromString(str);
+    let m = Modifier.parse(str);
     result = transModifierObject(m);
+    if (result) {
+        return result;
+    }
+
+    //固化单数参数匹配
+    let weldModifier = m.weldingSingleParams();
+    result = transModifierObject(weldModifier);
     if (result) {
         return result;
     }
@@ -363,6 +370,7 @@ function chooseFromRepeats(results, ctx) {
  * @param {*} target 
  */
 function ctxMatchs(pattern, target) {
+    console.log(pattern, target);
     if (!pattern && !target) {
         return true
     }
@@ -379,7 +387,7 @@ function ctxMatchs(pattern, target) {
 
     if (pattern.isSingle) {
         let sigleParamIndex = pattern.singleIndex;
-        if (target.params && parseInt(target.params[sigleParamIndex]) === 1) {
+        if (target.params && parseInt(target.params[sigleParamIndex].v) === 1) {
             return true;
         }
     }
@@ -448,12 +456,12 @@ class Modifier {
      * @param {*} str 
      * @returns 
      */
-    static fromString(str) {
+    static parse(str) {
         let segments = []
         let params = []
 
         if (str) {
-            let pattern = /(\+|-)?[\d&&\.]+/g;
+            let pattern = /([+-]?[\d&&\.]+)(\s\(augmented\))?/g;
             let len = str.length;
 
             let lastIndex = 0;
@@ -461,18 +469,19 @@ class Modifier {
             while (true) {
                 let match = pattern.exec(str);
                 if (match) {
-                    let result = match[0];
+                    let result = match[1];
+                    let argmented = match[2];
                     let index = match.index;
                     if (lastIndex !== index) {
-                        segments.push(new Segment(STR_SEGMENT, str.substring(lastIndex, index), null));
+                        segments.push(new Segment(STR_SEGMENT, str.substring(lastIndex, index)));
                     }
 
                     segments.push(new Segment(PARAM_SEGMENT, null, params.length));
-                    params.push(result);
+                    params.push(new Param(result, Boolean(argmented)));
                     lastIndex = pattern.lastIndex;
                 } else {
                     if (lastIndex < len) {
-                        segments.push(new Segment(1, str.substring(lastIndex), null, null));
+                        segments.push(new Segment(STR_SEGMENT, str.substring(lastIndex)));
                     }
                     break;
                 }
@@ -497,6 +506,36 @@ class Modifier {
             }
         }
         return buf.join("");
+    }
+
+    /**
+     * 将单数参数固化到模板主体中，返回新的Modifer对象。
+     */
+    weldingSingleParams() {
+        let newSegments = [];
+        let newParams = [];
+
+        for (let [i, segment] of this.segments.entries()) {
+            if (segment.type === PARAM_SEGMENT) {
+                let param = this.params[segment.index];
+
+                //单数参数不仅值为1，而且不能是百分比参数
+                if (param.v === '1'
+                    && (i == this.segments.length - 1
+                        || this.segments[i + 1].type === STR_SEGMENT
+                        && !this.segments[i + 1].content.startsWith("%"))) {
+                    //这里暂不考虑(argmented)存在的情况
+                    newSegments.push(new Segment(STR_SEGMENT, param.v));
+                    continue;
+                }
+
+                newParams.push(param);
+            }
+
+            newSegments.push(segment);
+        }
+
+        return new Modifier(newSegments, newParams);
     }
 }
 
@@ -582,8 +621,12 @@ class Template {
             if (s.type === STR_SEGMENT) {
                 buf.push(s.content);
             } else {
-                buf.push(`${paramsMapping[s.index]}`);
-            }
+                let param = paramsMapping[s.index];
+                buf.push(`${param.v}`);
+                if (param.argmented) {
+                    buf.push(` (argmented)`);
+                }
+            };
         }
 
         return buf.join("");
@@ -613,6 +656,18 @@ class Segment {
         this.type = type;
         this.content = content;
         this.index = index;
+    }
+}
+
+/**
+ * 表示一个实际参数。
+ * 
+ * argmented表示参数是否是计算得到，出现于商品的特殊词缀中。
+ */
+class Param {
+    constructor(v, argmented) {
+        this.v = v;
+        this.argmented = argmented;
     }
 }
 

@@ -12,7 +12,7 @@ export { requirements } from "./resources/requirements.js";
 export { formulableNodes } from "./resources/formulable-nodes.js";
 export { repeatedFormulableNodes } from "./resources/formulable-nodes-repeated.js";
 export { modifiers } from "./resources/modifiers.js";
-export { repeatedModifiers } from "./resources/repeated-modifiers.js";
+export { repeatedModifiers } from "./resources/modifiers-repeated.js";
 export { jewels } from "./resources/jewels.js";
 export { itemClasses } from "./resources/trade/item-classes.js";
 

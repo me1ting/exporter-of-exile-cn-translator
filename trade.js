@@ -91,7 +91,7 @@ class Part {
                         buf.push(transFlaskName(modifier));
                     } else {
                         //基础类型
-                        buf.push(transBaseType(modifier));
+                        buf.push(transTypeLine(modifier));
                     }
                 }
                 continue;
@@ -214,4 +214,14 @@ function transFlaskName(str) {
     }
 
     return transBaseType(name);
+}
+
+const SYNTHESISED_CN = "忆境 ";
+const SYNTHESISED_EN = "Synthesised";
+function transTypeLine(str){
+    if(str.startsWith(SYNTHESISED_CN)){
+        return SYNTHESISED_EN+transBaseType(str.substring(SYNTHESISED_CN.length));
+    }
+
+    return transBaseType(str);
 }

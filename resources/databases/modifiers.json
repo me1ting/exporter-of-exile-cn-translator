@@ -13992,7 +13992,6 @@
     "当你嘲讽 1 个敌人时，有 {0} 的几率获得 1 个耐力球": "{0} chance to gain an Endurance Charge when you Taunt an Enemy",
     "你格挡攻击伤害时有 {0} 的几率获得 1 个狂怒球": "{0} chance to gain a Frenzy Charge when you Block Attack Damage",
     "你格挡时有 {0} 的几率获得 1 个狂怒球": "{0} chance to gain a Frenzy Charge when you Block",
-    "晕眩敌人时有 {0} 的几率获得 1 个狂怒球": "{0} chance to gain a Frenzy Charge when you Stun an Enemy",
     "使用药剂时有 {0} 的几率获得【猛攻】效果": "{0} chance to gain Onslaught when you use a Flask",
     "击中稀有或传奇敌人时，有 {0} 的几率获得【猛攻】效果，持续 {1} 秒": "{0} chance to gain Onslaught for {1} Seconds when you Hit a Rare or Unique Enemy",
     "击中被 1 层蜘蛛网影响的敌人时，有 {0} 的几率获得 1 个暴击球": "{0} chance to gain a Power Charge on hitting an Enemy affected by a Spider's Web",
@@ -22299,10 +22298,16 @@
     "救赎者物品": "Redeemer Item",
     "圣战者物品": "Crusader Item",
     "狩猎者物品": "Hunter Item",
+    "忆境物品": "Synthesised Item",
+    "分裂之物": "Fractured Item",
     "已腐化": "Corrupted",
     "天灾": "Scourged",
+    "分裂": "Split",
+    "已复制": "Mirrored",
+    "未鉴定": "Unidentified",
     "{1} 秒内回复 {0} 生命": "Recovers {0} Life over {1} Seconds",
     "{1} 秒内回复 {0} 魔力": "Recovers {0} Mana over {1} Seconds",
     "每次使用会从 {1} 充能次数中消耗 {0} 次": "Consumes {0} of {1} Charges on use",
-    "目前有 {0} 充能次数": "Currently has {0} Charges"
+    "目前有 {0} 充能次数": "Currently has {0} Charges",
+    "持续 {0} 秒": "Lasts {0} Seconds"
 }

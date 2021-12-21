@@ -14,8 +14,19 @@
     "双手锤": "Two Hand Maces",
     "双手斧": "Two Hand Axes",
     "鱼竿": "Fishing Rods",
-    "魔力药剂":"Mana Flasks",
-    "生命药剂":"Life Flasks",
-    "功能药剂":"Utility Flasks",
-    "复合药剂":"Hybrid Flasks"
+    "魔力药剂": "Mana Flasks",
+    "生命药剂": "Life Flasks",
+    "功能药剂": "Utility Flasks",
+    "复合药剂": "Hybrid Flasks",
+    "珠宝": "Jewels",
+    "深渊珠宝": "Abyss Jewels",
+    "戒指": "Rings",
+    "腰带": "Belts",
+    "项链": "Amulets",
+    "箭袋": "Quivers",
+    "盾": "Shields",
+    "头部": "Helmets",
+    "手套": "Gloves",
+    "鞋子": "Boots",
+    "胸甲": "Body Armours"
 }

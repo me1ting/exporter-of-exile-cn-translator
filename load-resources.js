@@ -14,6 +14,7 @@ export { repeatedFormulableNodes } from "./resources/formulable-nodes-repeated.j
 export { modifiers } from "./resources/modifiers.js";
 export { repeatedModifiers } from "./resources/repeated-modifiers.js";
 export { jewels } from "./resources/jewels.js";
+export { itemClasses } from "./resources/trade/item-classes.js";
 
 export function shouldBeTranlated(target) {
     console.log("should be translated: " + target.type + "," + target.content);

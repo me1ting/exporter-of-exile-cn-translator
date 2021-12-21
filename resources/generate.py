@@ -293,6 +293,18 @@ def generate_jewels():
 
     save_dict_as_javascript('./jewels.js', data, 'jewels')
 
+# trade/item-classes.js
+
+def generate_item_classes():
+    data = {}
+
+    with open('./databases/trade/item_classes.json', 'rt', encoding="utf-8") as f:
+        db = json.loads(f.read())
+
+        for k, v in db.items():
+            data[k] = v
+
+    save_dict_as_javascript('./trade/item-classes.js', data, 'itemClasses')
 
 def save_dict_as_javascript(path, data, name):
     with open(path, 'wt') as f:
@@ -313,3 +325,4 @@ generate_properties()
 generate_formulable_nodes()
 generate_modifiers()
 generate_jewels()
+generate_item_classes()

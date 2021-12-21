@@ -1,6 +1,6 @@
 import {
     uniques, repeatedUniques, weapons, repeatedWeapons, armour, accessories, flasks, gems, properties, requirements,
-    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, shouldBeTranlated
+    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, itemClasses, shouldBeTranlated
 } from "./load-resources.js";
 
 /**
@@ -157,6 +157,16 @@ export function transProperty(str) {
 }
 
 /**
+ * 尝试翻译属性，翻译失败不记录日志。
+ * @param {*} str 
+ * @returns 
+ */
+export function tryTransProperty(str) {
+    let val = properties.get(str);
+    return val ? val : str;
+}
+
+/**
  * 翻译需求。
  * @param {*} str 
  * @returns 
@@ -173,6 +183,17 @@ export function transRequirement(str) {
     });
 
     return str;
+}
+
+/**
+ * 尝试翻译需求，翻译失败返回不记录日志。
+ * @param {*} str 
+ * @returns 
+ */
+export function tryTransRequirement(str) {
+    let val = requirements.get(str);
+
+    return val ? val : str;
 }
 
 /**
@@ -401,6 +422,20 @@ export function transGemProperty(str) {
     } else {
         return str;
     }
+}
+
+export function transItemClasses(str) {
+    let val = itemClasses.get(str);
+    if (val) {
+        return val;
+    }
+
+    shouldBeTranlated({
+        "type": "itemClass",
+        "content": str
+    });
+
+    return str;
 }
 
 class Modifier {

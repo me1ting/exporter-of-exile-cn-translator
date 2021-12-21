@@ -22300,5 +22300,9 @@
     "圣战者物品": "Crusader Item",
     "狩猎者物品": "Hunter Item",
     "已腐化": "Corrupted",
-    "天灾": "Scourged"
+    "天灾": "Scourged",
+    "{1} 秒内回复 {0} 生命": "Recovers {0} Life over {1} Seconds",
+    "{1} 秒内回复 {0} 魔力": "Recovers {0} Mana over {1} Seconds",
+    "每次使用会从 {1} 充能次数中消耗 {0} 次": "Consumes {0} of {1} Charges on use",
+    "目前有 {0} 充能次数": "Currently has {0} Charges"
 }

@@ -1,8 +1,10 @@
-import { transBaseType, transModifier, transName, transProperty } from "./resources.js";
+import { transBaseType, transItemClasses, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
 
 const PARTS_SEPARATOR = "--------";
 const LINES_SEPARATOR = "\r\n";
 const KEY_VALUE_SEPARATOR = ": ";
+
+const KEY_ITEM_CLASS = "物品类别";
 
 export function translateGoods(str) {
     let goods = Goods.parse(str);
@@ -70,21 +72,29 @@ class Part {
 
         let isMetaPart = false;
         let firstLine = this.lines[0];
-        if (firstLine.type === LINE_TYPE_KEY_VALUE && firstLine.data.key === "物品类别") {
+        if (firstLine.type === LINE_TYPE_KEY_VALUE && firstLine.data.key === KEY_ITEM_CLASS) {
             isMetaPart = true;
         }
 
         for (let [i, line] of this.lines.entries()) {
-            if (isMetaPart) {
+            //元部分中词缀类型的行
+            if (isMetaPart && line.type === LINE_TYPE_MODIFIER) {
+                //一般而言，倒数两行为name和baseType
+                //但是非传奇药剂有所不同，没有name，只有修饰符+baseType的倒数第一行 
+                let modifier = line.data.modifier;
                 if (i === this.lines.length - 2) {
                     //物品名称
-                    buf.push(transName(line.data.modifier));
-                    continue;
+                    buf.push(transName(modifier));
                 } else if (i === this.lines.length - 1) {
-                    //基础类型
-                    buf.push(transBaseType(line.data.modifier));
-                    continue;
+                    if (isFlaskName(modifier)) {
+                        //药剂名称
+                        buf.push(transFlaskName(modifier));
+                    } else {
+                        //基础类型
+                        buf.push(transBaseType(modifier));
+                    }
                 }
+                continue;
             }
             buf.push(line.getTranslation());
         }
@@ -121,7 +131,7 @@ class Line {
             type = LINE_TYPE_ONLY_KEY;
             data.key = str.substring(0, str.length - 1);
         } else {
-            let pattern = new RegExp("(.+)\\s(\\(\\w+\\))");
+            let pattern = new RegExp("(.+)\\s(\\(\\w+\\))$");
             let matchs = pattern.exec(str);
             if (matchs) {
                 data.modifier = matchs[1];
@@ -138,6 +148,15 @@ class Line {
         if (this.type === LINE_TYPE_KEY_VALUE) {
             let key = this.data.key;
             let value = this.data.value;
+
+            if (key === KEY_ITEM_CLASS) {
+                value = transItemClasses(value);
+            }
+
+            //商品中的某些属性可能归类于requirements
+            if (!isASCII(key)) {
+                key = tryTransRequirement(key);
+            }
 
             if (!isASCII(key)) {
                 key = transProperty(key);
@@ -159,6 +178,10 @@ class Line {
         } else {
             let modifier = this.data.modifier;
             let suffix = this.data.suffix;
+            //商品中的某些词缀可能被归类为properties
+            if (!isASCII(modifier)) {
+                modifier = tryTransProperty(modifier);
+            }
             if (!isASCII(modifier)) {
                 modifier = transModifier(modifier);
             }
@@ -174,4 +197,21 @@ class Line {
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
+}
+
+function isFlaskName(str) {
+    return str.endsWith("药剂");
+}
+
+const FLASK_NAME_OF1 = "之";
+const FLASK_NAME_OF2 = "的";
+function transFlaskName(str) {
+    let name = str;
+    if (name.includes(FLASK_NAME_OF1) || name.includes(FLASK_NAME_OF2)) {
+        name = name.replaceAll(FLASK_NAME_OF2, FLASK_NAME_OF1);
+        let res = str.split(FLASK_NAME_OF1);
+        name = res[res.length - 1];
+    }
+
+    return transBaseType(name);
 }

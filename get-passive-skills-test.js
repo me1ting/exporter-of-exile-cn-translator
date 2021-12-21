@@ -5,7 +5,7 @@ import {
 import { translatePassiveSkills } from './get-passive-skills.js';
 
 
-let readPath = "./demo/pob/tree1.json";
+let readPath = "./demo/tree.json";
 
 let readFileHandle;
 let writeFileHandle;

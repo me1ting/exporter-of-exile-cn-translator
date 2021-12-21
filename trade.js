@@ -21,14 +21,7 @@ class Goods {
 
         let objects = [];
         for (let part of parts) {
-            //不使用trim，是因为不清楚空白是否属于词缀
-            if (part.startsWith(LINES_SEPARATOR)) {
-                part = part.substring(LINES_SEPARATOR.length);
-            }
-            if (part.endsWith(LINES_SEPARATOR)) {
-                part = part.substring(0, part.length - LINES_SEPARATOR.length);
-            }
-
+            part = part.trim();
             objects.push(Part.parse(part));
         }
 

@@ -518,7 +518,7 @@ class Modifier {
                 //参数值为1，且非百分比参数
                 if (param.v === '1'
                     && (i == this.segments.length - 1
-                        || !this.segments[i + 1].content.startsWith("%"))) {//不存在连续的两个参数段，参数段后的参数必然是文本段
+                        || !this.segments[i + 1].content.startsWith("%"))) {//不存在连续的两个参数段，参数段后必然是文本段
                     //这里暂不考虑(argmented)存在的情况
                     newSegments.push(new Segment(STR_SEGMENT, param.v));
                     continue;

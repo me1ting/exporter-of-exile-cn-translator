@@ -1,4 +1,4 @@
-import { transBaseType, transItemClasses, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
+import { transBaseType, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
 
 const PARTS_SEPARATOR = "--------";
 const LINES_SEPARATOR = "\r\n";
@@ -143,7 +143,7 @@ class Line {
             let value = this.data.value;
 
             if (key === KEY_ITEM_CLASS) {
-                value = transItemClasses(value);
+                value = transItemClass(value);
             }
 
             //商品中的某些属性可能被归类为requirements

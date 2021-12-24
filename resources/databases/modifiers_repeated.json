@@ -24,41 +24,5 @@
         {
             "v": "{0}% increased Attack Speed during any Flask Effect"
         }
-    ],
-    "若你至少拥有 {1} 点敏捷，可以投掷地雷的技能就会最多额外投掷 {0} 个地雷": [
-        {
-            "v": "Skills which throw Mines throw up to {0} additional Mines if you have at least {1} Dexterity"
-        },
-        {
-            "v": "Skills which throw Mines throw up to {0} additional Mine if you have at least {1} Dexterity",
-            "ctx": {
-                "isSingle": true,
-                "singleIndex": 1
-            }
-        }
-    ],
-    "若你至少拥有 {1} 点智慧，可以放置地雷的技能就会最多额外投掷 {0} 个地雷": [
-        {
-            "v": "Skills which throw Mines throw up to {0} additional Mines if you have at least {1} Dexterity"
-        },
-        {
-            "v": "Skills which throw Mines throw up to {0} additional Mine if you have at least {1} Intelligence",
-            "ctx": {
-                "isSingle": true,
-                "singleIndex": 1
-            }
-        }
-    ],
-    "被敌人击中后使其冰缓 {0} 秒，行动速度降低 {1}%": [
-        {
-            "v": "Chill Enemy for {0} seconds when Hit, reducing their Action Speed by {1}%"
-        },
-        {
-            "v": "Chill Enemy for {0} second when Hit, reducing their Action Speed by {1}%",
-            "ctx": {
-                "isSingle": true,
-                "singleIndex": 0
-            }
-        }
     ]
 }

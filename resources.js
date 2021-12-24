@@ -82,7 +82,7 @@ export function transName(str, ctx) {
  * 翻译基础类型。
  * 
  * 重复项：
- * 丝绸手套 护甲 调用方自行通过icon区分（因为是暗金，必须区分）
+ * 丝绸手套 护甲 调用方自行通过icon区分（因为存在暗金，必须区分）
  * 龙骨细剑 武器 无法区分，也无必要区分（目前没有对应的暗金）
  * 
  * @param {*} str 基础类型 
@@ -199,9 +199,7 @@ export function tryTransRequirement(str) {
 /**
  * 翻译涂油天赋技能。
  * 
- * 存在重复项：电能之击、毁灭装置、毒蛇之牙、英勇、汲血者
- * 由于重复项的重复次数目前最大为2，因此目前使用浏览器原生的confirm进行区分。
- * 如果后续重复次数超过2，可以使用prompt。
+ * 存在重复项：电能之击、毁灭装置、毒蛇之牙、英勇、汲血者，使用prompt区分
  * 
  * @param {*} str 
  * @returns 
@@ -228,7 +226,7 @@ function transFormulableNode(str) {
             while (choice < 0 || choice >= vals.length) {
                 let input = prompt(promptText);
                 choice = parseInt(input);
-                if (isNaN(choice) || isFinite(choice)) {
+                if (isNaN(choice)) {
                     choice = -1;
                 }
             }
@@ -256,11 +254,12 @@ const ADDED_SMALL_PASSIVE_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
 
 /**
  * 翻译词缀。
+ * 
  * 存在重复词缀：
- * 1. 仅大小写不同，后端取一种。
- * 2. 语义不同，但其中一种在交易网站上查不到（可能是遗产或其它原因导致），后端取有效的那种。
+ * 1. 仅大小写不同，数据库保留大写字母更多的一项，如军帽上存在的重复词缀。
+ * 2. 语义不同，但其中一种在交易网站上查不到，数据保留有效项。
  * 3. 语义不同，两种皆有效，添加context解决。
- * 4. 单复数语法导致的不同，1.只有一个参数，后端分别插入单、复数版本；2. 多个参数，添加context解决。
+ * 4. 单复数语法导致的不同：1.只有一个参数，后端分别插入单、复数版本；2. 多个参数，将单数参数固化到模板主体中。
  * @param {*} str 
  * @param {*} ctx 上下文
  * @returns 
@@ -355,7 +354,7 @@ function transModifierObject(m, ctx) {
 function chooseFromRepeats(results, ctx) {
     let defaultResult = null;
     for (let r of results) {
-        if (ctxMatchs(r.ctx, ctx)) {
+        if (ctxMatch(r.ctx, ctx)) {
             return r;
         }
         if (!r.ctx) {
@@ -371,7 +370,7 @@ function chooseFromRepeats(results, ctx) {
  * @param {*} pattern 
  * @param {*} target 
  */
-function ctxMatchs(pattern, target) {
+function ctxMatch(pattern, target) {
     if (!pattern && !target) {
         return true
     }
@@ -382,13 +381,6 @@ function ctxMatchs(pattern, target) {
 
     if (pattern.types && target.type) {
         if (pattern.types.includes(target.type)) {
-            return true;
-        }
-    }
-
-    if (pattern.isSingle) {
-        let sigleParamIndex = pattern.singleIndex;
-        if (target.params && parseInt(target.params[sigleParamIndex].v) === 1) {
             return true;
         }
     }
@@ -433,7 +425,7 @@ export function transGemProperty(str) {
     }
 }
 
-export function transItemClasses(str) {
+export function transItemClass(str) {
     let val = itemClasses.get(str);
     if (val) {
         return val;
@@ -447,6 +439,11 @@ export function transItemClasses(str) {
     return str;
 }
 
+/**
+ * 表示一个词缀。
+ * 
+ * 一个词缀解析可以得到模板主体和实际参数两部分。
+ */
 class Modifier {
     constructor(segments, params) {
         this.segments = segments;
@@ -494,8 +491,6 @@ class Modifier {
 
     /**
      * 获取模板主体。
-     * 
-     * 无法根据词缀解析得到其模板，因为无法判断形式参数顺序。
      */
     getTemplateBody() {
         let buf = [];
@@ -520,11 +515,10 @@ class Modifier {
             if (segment.type === PARAM_SEGMENT) {
                 let param = this.params[segment.index];
 
-                //单数参数不仅值为1，而且不能是百分比参数
+                //参数值为1，且非百分比参数
                 if (param.v === '1'
                     && (i == this.segments.length - 1
-                        || this.segments[i + 1].type === STR_SEGMENT
-                        && !this.segments[i + 1].content.startsWith("%"))) {
+                        || !this.segments[i + 1].content.startsWith("%"))) {//不存在连续的两个参数段，参数段后的参数必然是文本段
                     //这里暂不考虑(argmented)存在的情况
                     newSegments.push(new Segment(STR_SEGMENT, param.v));
                     continue;

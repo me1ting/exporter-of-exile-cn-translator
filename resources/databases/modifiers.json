@@ -22308,5 +22308,11 @@
     "{1} 秒内回复 {0} 魔力": "Recovers {0} Mana over {1} Seconds",
     "每次使用会从 {1} 充能次数中消耗 {0} 次": "Consumes {0} of {1} Charges on use",
     "目前有 {0} 充能次数": "Currently has {0} Charges",
-    "持续 {0} 秒": "Lasts {0} Seconds"
+    "持续 {0} 秒": "Lasts {0} Seconds",
+    "若你至少拥有 {1} 点敏捷，可以投掷地雷的技能就会最多额外投掷 {0} 个地雷": "Skills which throw Mines throw up to {0} additional Mines if you have at least {1} Dexterity",
+    "若你至少拥有 {0} 点敏捷，可以投掷地雷的技能就会最多额外投掷 1 个地雷": "Skills which throw Mines throw up to 1 additional Mine if you have at least {0} Dexterity",
+    "若你至少拥有 {1} 点智慧，可以放置地雷的技能就会最多额外投掷 {0} 个地雷": "Skills which throw Mines throw up to {0} additional Mines if you have at least {1} Dexterity",
+    "若你至少拥有 {0} 点智慧，可以放置地雷的技能就会最多额外投掷 1 个地雷": "Skills which throw Mines throw up to 1 additional Mine if you have at least {0} Dexterity",
+    "被敌人击中后使其冰缓 {0} 秒，行动速度降低 {1}%":"Chill Enemy for {0} seconds when Hit, reducing their Action Speed by {1}%",
+    "被敌人击中后使其冰缓 1 秒，行动速度降低 {0}%":"Chill Enemy for 1 second when Hit, reducing their Action Speed by {0}%"
 }

@@ -72,8 +72,8 @@ class Part {
         for (let [i, line] of this.lines.entries()) {
             //元部分中词缀类型的行
             if (isMetaPart && line.type === LINE_TYPE_MODIFIER) {
-                //一般而言，倒数两行为name和baseType
-                //但是非传奇药剂有所不同，没有name，只有修饰符+baseType的倒数第一行 
+                //一般而言，倒数两行是name和baseType
+                //但是非传奇药剂有所不同，只有一行：修饰词+baseType
                 let modifier = line.data.modifier;
                 if (i === this.lines.length - 2) {
                     //物品名称
@@ -146,7 +146,7 @@ class Line {
                 value = transItemClasses(value);
             }
 
-            //商品中的某些属性可能归类于requirements
+            //商品中的某些属性可能被归类为requirements
             if (!isASCII(key)) {
                 key = tryTransRequirement(key);
             }
@@ -210,7 +210,7 @@ function transFlaskName(str) {
 }
 
 const SYNTHESISED_CN = "忆境 ";
-const SYNTHESISED_EN = "Synthesised";
+const SYNTHESISED_EN = "Synthesised ";
 function transTypeLine(str){
     if(str.startsWith(SYNTHESISED_CN)){
         return SYNTHESISED_EN+transBaseType(str.substring(SYNTHESISED_CN.length));

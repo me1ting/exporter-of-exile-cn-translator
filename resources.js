@@ -225,7 +225,7 @@ function transFormulableNode(str) {
 
             while (choice < 0 || choice >= vals.length) {
                 let input = prompt(promptText);
-                choice = parseInt(input);
+                choice = parseInt(input, 10);
                 if (isNaN(choice)) {
                     choice = -1;
                 }

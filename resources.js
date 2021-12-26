@@ -265,8 +265,6 @@ const ADDED_SMALL_PASSIVE_SKILL_GRANT_EN = "Added Small Passive Skills grant: ";
  * @returns 
  */
 export function transModifier(str, ctx) {
-    str = str.trim();
-
     //附魔
     if (str.startsWith(ALLOCATE_CN)) {
         let node = str.substring(ALLOCATE_CN.length);

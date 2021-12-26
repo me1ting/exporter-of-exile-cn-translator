@@ -22276,6 +22276,7 @@
     "此物品上装备的【诅咒技能石】等级 {0}": "{0} to Level of Socketed Curse Gems",
     "{0} 近战打击范围": "{0} to Melee Strike Range",
     "{0}% 格挡法术伤害几率": "{0}% Chance to Block Spell Damage",
+    "{0}% 格挡法术伤害几率 ": "{0}% Chance to Block Spell Damage",
     "中毒时使用可以在 4 秒内免疫中毒": "Grants Immunity to Poison for 4 seconds if used while Poisoned",
     "被冰缓时使用可以在 4 秒内免疫冰缓": "Grants Immunity to Chill for 4 seconds if used while Chilled",
     "被冻结时使用可以在 4 秒内免疫冻结": "Grants Immunity to Freeze for 4 seconds if used while Frozen",

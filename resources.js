@@ -1,6 +1,6 @@
 import {
     uniques, repeatedUniques, weapons, repeatedWeapons, armour, accessories, flasks, gems, properties, requirements,
-    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, itemClasses, shouldBeTranlated
+    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, itemClasses, shouldBeTranlated, compoundModifiers
 } from "./load-resources.js";
 
 /**
@@ -277,17 +277,6 @@ export function transModifier(str, ctx) {
         return ADDED_SMALL_PASSIVE_SKILL_GRANT_EN + transModifier(granted);
     }
 
-    //复合词缀
-    if (str.includes('\n')) {
-        let mods = str.split('\n')
-        let buf = []
-        for (let mod of mods) {
-            buf.push(transModifier(mod));
-        }
-
-        return buf.join('\n');
-    }
-
     //精确匹配
     let result = modifiers.get(str);
     if (!result) {
@@ -308,10 +297,23 @@ export function transModifier(str, ctx) {
     }
 
     //固化单数参数匹配
-    let weldModifier = m.weldingSingleParams();
-    result = transModifierObject(weldModifier);
-    if (result) {
-        return result;
+    if (m.hasSingleParam()) {
+        let weldModifier = m.weldingSingleParams();
+        result = transModifierObject(weldModifier);
+        if (result) {
+            return result;
+        }
+    }
+
+    //作为复合词缀匹配
+    if (str.includes('\n')) {
+        let mods = str.split('\n')
+        let buf = []
+        for (let mod of mods) {
+            buf.push(transModifier(mod));
+        }
+
+        return buf.join('\n');
     }
 
     shouldBeTranlated({
@@ -380,6 +382,34 @@ function ctxMatch(pattern, target) {
     if (pattern.types && target.type) {
         if (pattern.types.includes(target.type)) {
             return true;
+        }
+    }
+}
+
+/**
+ * 将词缀作为首行，获取关联的复合词缀信息。
+ * @param {*} str 目标词缀
+ * @returns 
+ */
+export function getCompoundModifiers(str) {
+    //精确匹配
+    let val = compoundModifiers.get(str);
+    if (val) {
+        return val;
+    }
+    //解析匹配
+    let m = Modifier.parse(str);
+    val = compoundModifiers.get(m.getTemplateBody());
+    if (val) {
+        return val;
+    }
+
+    //固化单数参数匹配
+    if (m.hasSingleParam()) {
+        let weldModifier = m.weldingSingleParams();
+        val = compoundModifiers.get(weldModifier.getTemplateBody());
+        if (val) {
+            return val;
         }
     }
 }
@@ -503,6 +533,21 @@ class Modifier {
     }
 
     /**
+     * 是否有单数参数。
+     */
+    hasSingleParam() {
+        for (let [i, p] of this.params.entries()) {
+            if (p.v === '1'
+                && (i === this.segments.length - 1
+                    || !this.segments[i + 1].content.startsWith("%"))) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * 将单数参数固化到模板主体中，返回新的Modifer对象。
      */
     weldingSingleParams() {
@@ -515,7 +560,7 @@ class Modifier {
 
                 //参数值为1，且非百分比参数
                 if (param.v === '1'
-                    && (i == this.segments.length - 1
+                    && (i === this.segments.length - 1
                         || !this.segments[i + 1].content.startsWith("%"))) {//不存在连续的两个参数段，参数段后必然是文本段
                     //这里暂不考虑(argmented)存在的情况
                     newSegments.push(new Segment(STR_SEGMENT, param.v));

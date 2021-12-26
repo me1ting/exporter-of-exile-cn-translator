@@ -200,7 +200,7 @@ def generate_formulable_nodes():
                             data2, 'repeatedFormulableNodes')
 
 
-# modifiers.js,modifiers-repeated.js
+# modifiers.js,modifiers-repeated.js,modifiers-compound.js
 
 
 def generate_modifiers():
@@ -211,6 +211,8 @@ def generate_modifiers():
     # 为了方便前端使用，需要将词缀模板进行处理：
     # - 将模板拆分为模板主体和形式参数列表两个部分
     data = {}
+    # 记录复合词缀
+    data3 = {}
     
     for k,v in db.items():
         fromTplBody, fromParams = parseTemplate(k)
@@ -221,6 +223,19 @@ def generate_modifiers():
             print(f"repeated template body: {fromTplBody}")
 
         data[fromTplBody] = {"fromParams": fromParams, "toTplBody": toTplBody, "toParams": toParams}
+
+        # 记录复合词缀
+        if '\n' in fromTplBody:
+            res = fromTplBody.split('\n')
+            first_line = res[0]
+            count = len(res)
+
+            if first_line in data3:
+                if count not in data3[first_line]:
+                    data3[first_line].append(count)
+            else:
+                data3[first_line] = [count]
+
 
     save_dict_as_javascript('./modifiers.js', data, 'modifiers')
 
@@ -248,8 +263,23 @@ def generate_modifiers():
         
         data2[fromTplBody] = formattedVals
 
+        # 记录复合词缀
+        if '\n' in fromTplBody:
+            res = fromTplBody.split('\n')
+            first_line = res[0]
+            count = len(res)
+
+            if first_line in data3:
+                if count not in data3[first_line]:
+                    data3[first_line].append(count)
+            else:
+                data3[first_line] = [count]
+
     save_dict_as_javascript('./modifiers-repeated.js',
                             data2, 'repeatedModifiers')
+
+    save_dict_as_javascript('./modifiers-compound.js',
+                            data3, 'compoundModifiers')
 
 
 def parseTemplate(t):

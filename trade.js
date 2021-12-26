@@ -1,8 +1,9 @@
-import { transBaseType, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
+import { getCompoundModifiers, transBaseType, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
 
 const PARTS_SEPARATOR = "--------";
 const LINES_SEPARATOR = "\r\n";
 const KEY_VALUE_SEPARATOR = ": ";
+const COMPOUND_SUB_LINE_SEPARATOR = "\n";
 
 const KEY_ITEM_CLASS = "物品类别";
 
@@ -57,9 +58,27 @@ class Part {
         let lines = str.split(LINES_SEPARATOR);
 
         let objects = [];
-        for (let line of lines) {
+        for (let i = 0; i < lines.length; i++) {
+            let line = lines[i];
+            let res = getCompoundModifiers(line);
+            if (res) {
+                //TODO：检查每一种长度的可能性
+                let count = res[0];
+                if (i + count <= lines.length) {
+                    let buf = [];
+                    for (let j = i; j < i + count; j++) {
+                        buf.push(lines[j]);
+                    }
+
+                    objects.push(Line.parse(buf.join(COMPOUND_SUB_LINE_SEPARATOR)));
+                    i += count;
+                    continue;
+                }
+            }
+
             objects.push(Line.parse(line));
         }
+
         return new Part(objects);
     }
 
@@ -217,9 +236,9 @@ function transFlaskName(str) {
 
 const SYNTHESISED_CN = "忆境 ";
 const SYNTHESISED_EN = "Synthesised ";
-function transTypeLine(str){
-    if(str.startsWith(SYNTHESISED_CN)){
-        return SYNTHESISED_EN+transBaseType(str.substring(SYNTHESISED_CN.length));
+function transTypeLine(str) {
+    if (str.startsWith(SYNTHESISED_CN)) {
+        return SYNTHESISED_EN + transBaseType(str.substring(SYNTHESISED_CN.length));
     }
 
     return transBaseType(str);

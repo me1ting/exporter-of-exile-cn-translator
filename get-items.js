@@ -50,7 +50,7 @@ export function translateItem(item) {
     }
 
     // 一般情况下，baseType === typeLine。
-    // 稀有药剂比较特殊，typeLine === 修饰词+baseType，因此使用翻译后的baseType替代。
+    // 魔法物品比较特殊，typeLine === 修饰词+baseType，因此使用翻译后的baseType替代。
     item.typeLine = item.baseType;
 
     if (item.properties) {

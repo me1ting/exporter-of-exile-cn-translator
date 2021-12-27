@@ -1,4 +1,4 @@
-import { getCompoundModifiers, transBaseType, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
+import { getCompoundModifiers, transBaseType, transTypeLine, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
 
 const PARTS_SEPARATOR = "--------";
 const LINES_SEPARATOR = "\r\n";
@@ -94,24 +94,27 @@ class Part {
             isMetaPart = true;
         }
 
+        let secondToLastModifier = undefined;
         for (let [i, line] of this.lines.entries()) {
             //元部分中词缀类型的行
             if (isMetaPart && line.type === LINE_TYPE_MODIFIER) {
                 //一般而言，倒数两行是name和baseType
-                //但是非传奇药剂有所不同，只有一行：修饰词+baseType
+                //但是魔法物品有所不同，只有一行：修饰词+baseType
                 let modifier = line.data.modifier;
                 if (i === this.lines.length - 2) {
-                    //物品名称
+                    //name
+                    secondToLastModifier = modifier;
                     buf.push(transName(modifier));
                 } else if (i === this.lines.length - 1) {
-                    if (isFlaskName(modifier)) {
-                        //药剂名称
-                        buf.push(transFlaskName(modifier));
-                    } else {
-                        //基础类型
+                    if (secondToLastModifier === undefined) {
+                        //typeLine
                         buf.push(transTypeLine(modifier));
+                    } else {
+                        //baseType
+                        buf.push(transBaseType(modifier));
                     }
                 }
+
                 continue;
             }
             buf.push(line.getTranslation());
@@ -215,31 +218,4 @@ class Line {
 
 function isASCII(str) {
     return /^[\x00-\x7F]*$/.test(str);
-}
-
-function isFlaskName(str) {
-    return str.endsWith("药剂");
-}
-
-const FLASK_NAME_OF1 = "之";
-const FLASK_NAME_OF2 = "的";
-function transFlaskName(str) {
-    let name = str;
-    if (name.includes(FLASK_NAME_OF1) || name.includes(FLASK_NAME_OF2)) {
-        name = name.replaceAll(FLASK_NAME_OF2, FLASK_NAME_OF1);
-        let res = str.split(FLASK_NAME_OF1);
-        name = res[res.length - 1];
-    }
-
-    return transBaseType(name);
-}
-
-const SYNTHESISED_CN = "忆境 ";
-const SYNTHESISED_EN = "Synthesised ";
-function transTypeLine(str) {
-    if (str.startsWith(SYNTHESISED_CN)) {
-        return SYNTHESISED_EN + transBaseType(str.substring(SYNTHESISED_CN.length));
-    }
-
-    return transBaseType(str);
 }

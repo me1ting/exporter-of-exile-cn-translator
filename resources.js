@@ -89,6 +89,20 @@ export function transName(str, ctx) {
  * @returns 
  */
 export function transBaseType(str) {
+    let val = tryTransBaseType(str);
+    if (val) {
+        return val;
+    }
+
+    shouldBeTranlated({
+        "type": "baseType",
+        "content": str
+    });
+
+    return str;
+}
+
+function tryTransBaseType(str) {
     let val = weapons.get(str);//武器
     if (val) {
         return val;
@@ -104,17 +118,12 @@ export function transBaseType(str) {
         return val;
     }
 
-    val = accessories.get(str);//配件
-    if (val) {
-        return val;
-    }
-
     val = flasks.get(str);//药剂
     if (val) {
         return val;
     }
 
-    val = accessories.get(str);//配件
+    val = accessories.get(str);//配饰
     if (val) {
         return val;
     }
@@ -129,8 +138,82 @@ export function transBaseType(str) {
         return val;
     }
 
+    return undefined;
+}
+
+const SYNTHESISED_CN = "忆境 ";
+const SYNTHESISED_EN = "Synthesised ";
+
+/**
+ * 翻译typeLine。
+ * 
+ * 一般而言，typeLine === baseType。但是魔法物品不同，typeLine === 一大堆修饰词+baseType。
+ * 由于整理、翻译修饰词是一件费力而无用的工作，因此这里选择去掉修饰词，保留baseType。
+ * 
+ * 推荐使用baseType的值直接替代typeLine。目前只有商店的魔法物品因为无baseType，才需要调用该方法来翻译typeLine。
+ * 
+ * @param {*} str 
+ */
+export function transTypeLine(str) {
+    if (str.startsWith(SYNTHESISED_CN)) {
+        return SYNTHESISED_EN + transTypeLine(str.substring(SYNTHESISED_CN.length));
+    }
+
+    //先尝试能否直接作为baseType翻译。
+    let val = tryTransBaseType(str);
+    if (val) {
+        return val;
+    }
+
+    //尝试失败，处理修饰词存在的情况。
+    //修饰词以`的`、`之`结尾，但是由于`的`、`之`又可能出现在baseType中，需要进一步判定。
+    let pattern = /.+?[之的]/ug;
+    if (pattern.test(str)) {
+        pattern.lastIndex = 0;
+
+        let len = str.length;
+        let slices = [];
+        let lastIndex = 0;
+        while (true) {
+            let matches = pattern.exec(str);
+            if (matches) {
+                let result = matches[0];
+                slices.push(result);
+                lastIndex = pattern.lastIndex;
+            } else {
+                if (lastIndex < len) {
+                    slices.push(str.substring(lastIndex));
+                }
+                break;
+            }
+        }
+
+        let last = slices[slices.length - 1];
+        let val = tryTransBaseType(last);
+        if (val) {
+            return val;
+        }
+
+        //只有超过2个才测试最后两个slices连接起来的可能性，因此等于两个时，在开始就进行了测试
+        if (slices.length > 2) {
+            let secondToLast = slices[slices.length - 2];
+            let val = tryTransBaseType(secondToLast + last);
+            if (val) {
+                return val;
+            }
+            //最多测试后三个slices连接起来的可能性。
+            if (slices.length > 3) {
+                let thirdToLast = slices[slices.length - 3];
+                let val = tryTransBaseType(thirdToLast + secondToLast + last);
+                if (val) {
+                    return val;
+                }
+            }
+        }
+    }
+
     shouldBeTranlated({
-        "type": "baseType",
+        "type": "typeLine",
         "content": str
     });
 

@@ -94,25 +94,17 @@ class Part {
             isMetaPart = true;
         }
 
-        let secondToLastModifier = undefined;
         for (let [i, line] of this.lines.entries()) {
             //元部分中词缀类型的行
             if (isMetaPart && line.type === LINE_TYPE_MODIFIER) {
-                //一般而言，倒数两行是name和baseType
-                //但是魔法物品有所不同，只有一行：修饰词+baseType
+                //一般而言，倒数两行是name和typeLine
+                //但是魔法物品有所不同，只有typeLine一行
                 let modifier = line.data.modifier;
                 if (i === this.lines.length - 2) {
-                    //name
-                    secondToLastModifier = modifier;
                     buf.push(transName(modifier));
                 } else if (i === this.lines.length - 1) {
-                    if (secondToLastModifier === undefined) {
-                        //typeLine
-                        buf.push(transTypeLine(modifier));
-                    } else {
-                        //baseType
-                        buf.push(transBaseType(modifier));
-                    }
+                    //baseType
+                    buf.push(transTypeLine(modifier));
                 }
 
                 continue;

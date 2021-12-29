@@ -166,7 +166,13 @@ export function transTypeLine(str) {
     }
 
     //尝试失败，处理修饰词存在的情况。
-    //修饰词以`的`、`之`结尾，但是由于`的`、`之`又可能出现在baseType中，需要进一步判定。
+    //修饰词以`的`、`之`结尾，但是由于`的`、`之`又可能出现在baseType中。
+    //以`的`、`之`为修饰词结尾，将baseType拆分为一个slices包含修饰词+"baseType"
+    //此时以下情况：
+    // - 得到的“baseType”就是baseType
+    // - 得到的“baseType”拼接其前一个或前两个修饰词才是真正的baseType
+    //
+    //分别测试每一种可能性
     let pattern = /.+?[之的]/ug;
     if (pattern.test(str)) {
         pattern.lastIndex = 0;
@@ -194,7 +200,7 @@ export function transTypeLine(str) {
             return val;
         }
 
-        //只有超过2个才测试最后两个slices连接起来的可能性，因此等于两个时，在开始就进行了测试
+        //只有超过2个才测试最后两个slices连接起来的可能性，而等于两个时，在函数开始就进行了测试
         if (slices.length > 2) {
             let secondToLast = slices[slices.length - 2];
             let val = tryTransBaseType(secondToLast + last);
@@ -619,11 +625,14 @@ class Modifier {
      * 是否有单数参数。
      */
     hasSingleParam() {
-        for (let [i, p] of this.params.entries()) {
-            if (p.v === '1'
-                && (i === this.segments.length - 1
-                    || !this.segments[i + 1].content.startsWith("%"))) {
-                return true;
+        for (let [i, segment] of this.segments.entries()) {
+            if (segment.type === PARAM_SEGMENT) {
+                let p = this.params[segment.index];
+                if (p.v === '1'
+                    && (i === this.segments.length - 1
+                        || !this.segments[i + 1].content.startsWith("%"))) {
+                    return true;
+                }
             }
         }
 

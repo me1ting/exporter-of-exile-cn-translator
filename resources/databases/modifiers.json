@@ -6159,7 +6159,7 @@
     "每 {2} 点力量可以为攻击附加 {0} - {1} 基础火焰伤害": "Adds {0} to {1} Fire Damage to Attacks per {2} Strength",
     "该武器击中致盲敌人时，附加 {0} - {1} 基础火焰伤害": "Adds {0} to {1} Fire Damage to Hits with this Weapon against Blinded Enemies",
     "每个暴击球造成 {0} - {1} 闪电伤害": "{0} to {1} Lightning Damage per Power Charge",
-    "近期内你每击败 1 个感电敌人，则附加 {0}{1} 基础闪电伤害": "Adds {0} to {1} Lightning Damage for each Shocked Enemy you've Killed Recently",
+    "近期内你每击败 {2} 个感电敌人，则附加 {0}{1} 基础闪电伤害": "Adds {0} to {1} Lightning Damage for each Shocked Enemy you've Killed Recently",
     "攻击按照每 {2} 点智慧附加 {0} 到 {1} 点闪电伤害": "Adds {0} to {1} Lightning Damage to Attacks per {2} Intelligence",
     "法术按照每个暴击球附加 {0} 到 {1} 点闪电伤害": "Adds {0} to {1} Lightning Damage to Spells per Power Charge",
     "你有鸟之力量时附加 {0} 到 {1} 点闪电伤害": "Adds {0} to {1} Lightning Damage while you have Avian's Might",
@@ -11743,7 +11743,7 @@
     "你没有能量护盾时，全局护甲提高 {0}": "{0} increased Global Armour while you have no Energy Shield",
     "你没有能量护盾时，全局护甲降低 {0}": "{0} reduced Global Armour while you have no Energy Shield",
     "每 {1} 的攻击伤害格挡几率会使法术伤害提高 {0}": "{0} increased Spell Damage per {1} Chance to Block Attack Damage",
-    "每 {1} 点智慧会使法术伤害提高 {0}": "{0} increased Spell Damage per {1} Intelligence",
+    "每 {1} 点智慧会使法术伤害提高 {0}%": "{0}% increased Spell Damage per {1} Intelligence",
     "每 {1} 点智慧会使法术伤害降低 {0}": "{0} reduced Spell Damage per {1} Intelligence",
     "格挡时能量护盾降低 {0}": "Lose {0} of your Energy Shield when you Block",
     "格挡时根据护甲的 {0} 偷取生命": "Leech {0} of your Armour as Life when you Block",
@@ -22242,5 +22242,10 @@
     "若你近期内击中过传奇敌人，则每秒获得 {0} 次药剂充能": "Flasks gain {0} Charges per second if you've Hit a Unique Enemy Recently",
     "若你近期内击中过传奇敌人，则每秒获得 1 次药剂充能": "Flasks gain 1 Charge per second if you've Hit a Unique Enemy Recently",
     "发射火焰投射物的攻击最多消耗 {0} 个额外钢刃碎片": "Attacks that Fire Projectiles Consume up to {0} additional Steel Shards",
-    "发射火焰投射物的攻击最多消耗 1 个额外钢刃碎片": "Attacks that Fire Projectiles Consume up to 1 additional Steel Shard"
+    "发射火焰投射物的攻击最多消耗 1 个额外钢刃碎片": "Attacks that Fire Projectiles Consume up to 1 additional Steel Shard",
+    "没有物理伤害": "Deal no Physical Damage",
+    "触发时，插入的闪电法术没有消耗": "Socketed Lightning Spells have no Cost if Triggered",
+    "无法造成元素伤害": "Deal no Elemental Damage",
+    "有 1 个白色插槽":"Has {0} White Socket",
+    "有 {0} 个白色插槽":"Has {0} White Sockets"
 }

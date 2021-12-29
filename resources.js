@@ -366,6 +366,23 @@ export function transModifier(str, ctx) {
         return ADDED_SMALL_PASSIVE_SKILL_GRANT_EN + transModifier(granted);
     }
 
+    //军帽词缀，不同于其它词缀，参数包括非数值（技能名称）。
+    //因为唯一，这里编码处理，如果以后存在大量的包含非数值参数的词缀，可以从归类为同一数据进行处理。
+    let p = /插入的技能石被 (\d+) 级的【(.+)】辅助/u;
+    let matches = p.exec(str);
+    if (matches) {
+        let level = matches[1];
+        let gem = matches[2];
+
+        let gemEN = transGem(`${gem}（辅）`);
+        if (gemEN.endsWith(` ${GEM_SUFFIX_SUPPORT_EN}`)) {
+            //-1是因为存在空格
+            gemEN = gemEN.substring(0, gemEN.length - GEM_SUFFIX_SUPPORT_EN.length - 1);
+        }
+
+        return `Socketed Gems are Supported by Level ${level} ${gemEN}"`;
+    }
+
     //精确匹配
     let result = modifiers.get(str);
     if (!result) {
@@ -627,10 +644,11 @@ class Modifier {
     hasSingleParam() {
         for (let [i, segment] of this.segments.entries()) {
             if (segment.type === PARAM_SEGMENT) {
-                let p = this.params[segment.index];
-                if (p.v === '1'
+                let param = this.params[segment.index];
+                if (param.v === '1'
                     && (i === this.segments.length - 1
-                        || !this.segments[i + 1].content.startsWith("%"))) {
+                        || this.segments[i + 1].type === PARAM_SEGMENT
+                        || this.segments[i + 1].type === STR_SEGMENT && !this.segments[i + 1].content.startsWith("%"))) {
                     return true;
                 }
             }
@@ -653,7 +671,8 @@ class Modifier {
                 //参数值为1，且非百分比参数
                 if (param.v === '1'
                     && (i === this.segments.length - 1
-                        || !this.segments[i + 1].content.startsWith("%"))) {//不存在连续的两个参数段，参数段后必然是文本段
+                        || this.segments[i + 1].type === PARAM_SEGMENT
+                        || this.segments[i + 1].type === STR_SEGMENT && !this.segments[i + 1].content.startsWith("%"))) {
                     //这里暂不考虑(argmented)存在的情况
                     newSegments.push(new Segment(STR_SEGMENT, param.v));
                     continue;

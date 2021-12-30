@@ -18398,7 +18398,7 @@
     "对周围敌人的投射物击中伤害降低 {0}": "{0} reduced Projectile Damage with Hits against nearby Enemies",
     "生命再生同样回复能量护盾": "Life Regeneration also Recovers Energy Shield",
     "理智状态下，被击中时在一秒内再生 {0} 生命": "Regenerate {0} Life over one second when Hit while Sane",
-    "你击败灼烧的敌人时有 {0} 的几率使周围所有敌人燃烧 4 秒，": "{0} chance when you Kill a Scorched Enemy to Burn Each surrounding",
+    "你击败灼烧的敌人时有 {0}% 的几率使周围所有敌人燃烧 {1} 秒，": "{0}% chance when you Kill a Scorched Enemy to Burn Each surrounding",
     "每秒造成被击败敌人 {1} 生命的火焰伤害": "Enemy for {0} seconds, dealing {1} of the Killed Enemy's Life as Fire Damage per second",
     "左戒指栏里有魔法戒指时，不会承受暴击的额外伤害": "Take no Extra Damage from Critical Strikes if you have a Magic Ring in left slot",
     "你身上的冰缓和感电效果提高 {0}": "{0} increased Effect of Chill and Shock on you",
@@ -20163,7 +20163,6 @@
     "憎恨的总魔力保留额外降低 {0}%": "Hatred has {0}% less Mana Reservation",
     "灼烧效果提高 {0}%": "{0}% increased Effect of Scorch",
     "灼烧效果降低 {0}%": "{0}% reduced Effect of Scorch",
-    "你击败灼烧的敌人时有 {0}% 的几率使周围所有敌人燃烧 4 秒，": "{0}% chance when you Kill a Scorched Enemy to Burn Each surrounding",
     "每秒造成被击败敌人 8% 生命的火焰伤害": "Enemy for 4 seconds, dealing 8% of the Killed Enemy's Life as Fire Damage per second",
     "破碎铁刃有 {0}% 的几率不消耗钢刃碎片": "Shattering Steel has {0}% chance to not consume Steel Shards",
     "格挡时使攻击者感电 {0} 秒": "Shock Attackers for {0} seconds on Block",
@@ -22246,6 +22245,8 @@
     "没有物理伤害": "Deal no Physical Damage",
     "触发时，插入的闪电法术没有消耗": "Socketed Lightning Spells have no Cost if Triggered",
     "无法造成元素伤害": "Deal no Elemental Damage",
-    "有 1 个白色插槽":"Has {0} White Socket",
-    "有 {0} 个白色插槽":"Has {0} White Sockets"
+    "有 1 个白色插槽": "Has {0} White Socket",
+    "有 {0} 个白色插槽": "Has {0} White Sockets",
+    "每秒回复 {0} 能量护盾": "Regenerate {0} Energy Shield per second",
+    "每个影响你的苍白之凝珠宝都使召唤生物持续伤害加成{0}%，最多 {1}%": "Minions have {0}% to Damage over Time Multiplier per\nGhastly Eye Jewel affecting you, up to a maximum of {1}%"
 }

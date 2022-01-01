@@ -26,7 +26,7 @@ export function translateItems(data) {
 export function translateItem(item) {
     let ctx = {};
     ctx.type = getType(item.baseType);
-    ctx.baseType = item.baseType;
+    ctx.baseTypeCN = item.baseType;
 
     if (item.name) {
         item.name = transName(item.name, ctx);

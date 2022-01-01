@@ -1,10 +1,16 @@
 {
     "丝绸手套": [
         {
-            "v": "Silk Gloves"
+            "v": "Silk Gloves",
+            "ctx": {
+                "uniquesCN": [
+                    "安赛娜丝的安抚之语"
+                ]
+            }
         },
         {
-            "v": "Fingerless Silk Gloves"
+            "v": "Fingerless Silk Gloves",
+            "default": true
         }
     ]
 }

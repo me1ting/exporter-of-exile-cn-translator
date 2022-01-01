@@ -3,13 +3,13 @@
         {
             "v": "Warped Timepiece",
             "ctx": {
-                "baseType": "青玉护身符"
+                "baseTypeCN": "青玉护身符"
             }
         },
         {
             "v": "Timetwist",
             "ctx": {
-                "baseType": "月光石戒指"
+                "baseTypeCN": "月光石戒指"
             }
         }
     ]

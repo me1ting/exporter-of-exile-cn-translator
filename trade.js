@@ -1,4 +1,5 @@
-import { getCompoundModifiers, transBaseType, transTypeLine, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement } from "./resources.js";
+import { modifiers } from "./load-resources.js";
+import { getCompoundModifiers, transTypeLine, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement, getType, getBaseTypeFromTypeLine } from "./resources.js";
 
 const PARTS_SEPARATOR = "--------";
 const LINES_SEPARATOR = "\r\n";
@@ -39,10 +40,11 @@ class Goods {
      * 返回翻译结果（字符串表示）
      */
     getTranslation() {
+        let ctx = {};
         let buf = [];
 
         for (let part of this.parts) {
-            buf.push(part.getTranslation());
+            buf.push(part.getTranslation(ctx));
         }
 
         return buf.join(`${LINES_SEPARATOR}${PARTS_SEPARATOR}${LINES_SEPARATOR}`);
@@ -85,7 +87,7 @@ class Part {
     /**
      * 返回翻译结果（字符串表示）
      */
-    getTranslation() {
+    getTranslation(ctx) {
         let buf = [];
 
         let isMetaPart = false;
@@ -101,15 +103,26 @@ class Part {
                 //但是魔法物品有所不同，只有typeLine一行
                 let modifier = line.data.modifier;
                 if (i === this.lines.length - 2) {
-                    buf.push(transName(modifier));
-                } else if (i === this.lines.length - 1) {
-                    //baseType
-                    buf.push(transTypeLine(modifier));
-                }
+                    //name
+                    ctx.nameCN = modifier;
+                    let typeLine = this.lines[this.lines.length - 1].data.modifier;
+                    ctx.baseTypeCN = getBaseTypeFromTypeLine(typeLine, ctx);
 
-                continue;
+                    buf.push(transName(modifier, ctx));
+                    continue;
+                } else if (i === this.lines.length - 1) {
+                    //typeLine
+                    if (!ctx.baseTypeCN) {
+                        ctx.baseTypeCN = getBaseTypeFromTypeLine(modifier, ctx);
+                    }
+                    ctx.type = getType(ctx.baseTypeCN);
+
+                    buf.push(transTypeLine(modifier, ctx));
+                    continue;
+                }
             }
-            buf.push(line.getTranslation());
+
+            buf.push(line.getTranslation(ctx));
         }
 
         return buf.join(`${LINES_SEPARATOR}`);
@@ -157,7 +170,7 @@ class Line {
         return new Line(data, type);
     }
 
-    getTranslation() {
+    getTranslation(ctx) {
         if (this.type === LINE_TYPE_KEY_VALUE) {
             let key = this.data.key;
             let value = this.data.value;
@@ -196,7 +209,7 @@ class Line {
                 modifier = tryTransProperty(modifier);
             }
             if (!isASCII(modifier)) {
-                modifier = transModifier(modifier);
+                modifier = transModifier(modifier, ctx);
             }
 
             if (suffix) {

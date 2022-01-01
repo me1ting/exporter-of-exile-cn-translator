@@ -1,7 +1,8 @@
 {
     "龙骨细剑": [
         {
-            "v": "Wyrmbone Rapier"
+            "v": "Wyrmbone Rapier",
+            "default": true
         },
         {
             "v": "Dragonbone Rapier"

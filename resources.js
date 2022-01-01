@@ -1,20 +1,20 @@
 import {
     uniques, repeatedUniques, weapons, repeatedWeapons, armour, accessories, flasks, gems, properties, requirements,
-    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, itemClasses, shouldBeTranlated, compoundModifiers
+    formulableNodes, repeatedFormulableNodes, modifiers, repeatedModifiers, jewels, itemClasses, shouldBeTranlated, compoundModifiers, repeatedArmour
 } from "./load-resources.js";
 
 /**
- * 获取物品名称对应的基本类型（EN）。
- * 有以下类型：weapon,armour,accessory,flask,gem,jewel
+ * 获取baseType所属的大类（EN，项目内部划分，非POE通用概念）。
+ * 有以下大类：weapon,armour,accessory,flask,gem,jewel
  * 分别表示：武器，护甲，饰品，药剂，宝石，珠宝
- * 如果无法判定类型，返回"unkonwn"
+ * 如果无法判定类型，返回"unknown"
  * 
  * 
- * @param {*} str 
+ * @param {*} baseType baseType
  * @returns 
  */
-export function getType(str) {
-    let val = weapons.get(str);//武器
+export function getType(baseType) {
+    let val = weapons.get(baseType);//武器
     if (!val) {
         val = repeatedWeapons.get(val);
     }
@@ -22,7 +22,7 @@ export function getType(str) {
         return "weapon";
     }
 
-    val = armour.get(str);//护甲
+    val = armour.get(baseType);//护甲
     if (!val) {
         val = repeatedWeapons.get(val);
     }
@@ -30,19 +30,19 @@ export function getType(str) {
         return "armour";
     }
 
-    val = accessories.get(str);//配件
+    val = accessories.get(baseType);//饰品
     if (val) {
         return "accessory";
     }
-    val = flasks.get(str);//药剂
+    val = flasks.get(baseType);//药剂
     if (val) {
         return "flask";
     }
-    val = gems.get(str);//技能
+    val = gems.get(baseType);//技能
     if (val) {
         return "gem";
     }
-    val = jewels.get(str);//珠宝
+    val = jewels.get(baseType);//珠宝
     if (val) {
         return "jewel";
     }
@@ -53,21 +53,21 @@ export function getType(str) {
  * 翻译物品名字。
  * 
  * 重复项 区分方式
- * 时空扭曲 baseType（CN）
+ * 时空扭曲 ctx.baseTypeCN
  * 
- * @param {*} str 物品名称
+ * @param {*} name 物品名称
  * @param {*} ctx 上下文，用于区分重复项。
  * @returns 
  */
-export function transName(str, ctx) {
-    let val = uniques.get(str);
+export function transName(name, ctx) {
+    let val = uniques.get(name);
     if (val) {
         return val;
     }
-    let vals = repeatedUniques.get(str);
+    let vals = repeatedUniques.get(name);
     if (vals) {
         for (let val of vals) {
-            if (val.ctx && val.ctx.baseType === ctx.baseType) {
+            if (val.ctx && val.ctx.baseTypeCN === ctx.baseTypeCN) {
                 return val.v;
             }
         }
@@ -82,58 +82,90 @@ export function transName(str, ctx) {
  * 翻译基础类型。
  * 
  * 重复项：
- * 丝绸手套 护甲 调用方自行通过icon区分（因为存在暗金，必须区分）
- * 龙骨细剑 武器 无法区分，也无必要区分（目前没有对应的暗金）
+ * 丝绸手套 护甲 建议调用方自己区分；本函数可以根据ctx.nameCN中的传奇名称来进行判定，未判定将返回默认值
+ * 龙骨细剑 武器 无法区分，也无必要区分，返回默认值
  * 
- * @param {*} str 基础类型 
+ * @param {*} baseType 基础类型
+ * @param {*} ctx 上下文，用于区分重复项
  * @returns 
  */
-export function transBaseType(str) {
-    let val = tryTransBaseType(str);
+export function transBaseType(baseType, ctx) {
+    let val = tryTransBaseType(baseType, ctx);
     if (val) {
         return val;
     }
 
     shouldBeTranlated({
         "type": "baseType",
-        "content": str
+        "content": baseType
     });
 
-    return str;
+    return baseType;
 }
 
-function tryTransBaseType(str) {
-    let val = weapons.get(str);//武器
+function tryTransBaseType(baseType, ctx) {
+    let val = weapons.get(baseType);//武器
     if (val) {
         return val;
     }
-    let vals = repeatedWeapons.get(str);
+    let vals = repeatedWeapons.get(baseType);
     if (vals && vals.length > 0) {
-        //目前只有 "龙骨细剑" 且无法区分，且不需要区分，返回任意一个即可。
-        return vals[0].v;
+        //目前存在重复baseType的武器只有龙骨细剑
+        //两种龙骨细剑都没有传奇，因此返回默认值即可
+        let defaultVal;
+        for (let val of vals) {
+            if (val.default) {
+                defaultVal = val;
+            }
+
+            if (defaultVal) {
+                return defaultVal.v;
+            }
+        }
     }
 
-    val = armour.get(str);//护甲
+    val = armour.get(baseType);//护甲
     if (val) {
         return val;
     }
 
-    val = flasks.get(str);//药剂
+    vals = repeatedArmour.get(baseType);
+    if (vals && vals.length > 0) {
+        //根据传奇名称判定具体的baseType，否则返回默认值
+        let defaultVal;
+        for (let val of vals) {
+            if (val.default) {
+                defaultVal = val;
+            }
+
+            if (val.ctx && ctx && val.ctx.uniquesCN && ctx.nameCN) {
+                if (val.ctx.uniquesCN.includes(ctx.nameCN)) {
+                    return val.v;
+                }
+            }
+
+            if (defaultVal) {
+                return defaultVal.v;
+            }
+        }
+    }
+
+    val = flasks.get(baseType);//药剂
     if (val) {
         return val;
     }
 
-    val = accessories.get(str);//配饰
+    val = accessories.get(baseType);//饰品
     if (val) {
         return val;
     }
 
-    val = gems.get(str);//技能
+    val = gems.get(baseType);//技能
     if (val) {
         return val;
     }
 
-    val = jewels.get(str);//珠宝
+    val = jewels.get(baseType);//珠宝
     if (val) {
         return val;
     }
@@ -141,6 +173,9 @@ function tryTransBaseType(str) {
     return undefined;
 }
 
+
+const SUPERIOR_CN = "精良的 ";
+const SUPERIOR_EN = "Superior ";
 const SYNTHESISED_CN = "忆境 ";
 const SYNTHESISED_EN = "Synthesised ";
 
@@ -150,52 +185,57 @@ const SYNTHESISED_EN = "Synthesised ";
  * 一般而言，typeLine === baseType。但是魔法物品不同，typeLine === 一大堆修饰词+baseType。
  * 由于整理、翻译修饰词是一件费力而无用的工作，因此这里选择去掉修饰词，保留baseType。
  * 
- * 推荐使用baseType的值直接替代typeLine。目前只有商店的魔法物品因为无baseType，才需要调用该方法来翻译typeLine。
+ * 推荐使用baseType的值直接替代typeLine。目前只有商店的魔法物品因为无baseType信息，才需要调用该方法来翻译typeLine。
  * 
- * @param {*} str 
+ * @param {*} typeLine
+ * @param {*} ctx 上下文，用于区分重复项
  */
-export function transTypeLine(str) {
-    if (str.startsWith(SYNTHESISED_CN)) {
-        return SYNTHESISED_EN + transTypeLine(str.substring(SYNTHESISED_CN.length));
+export function transTypeLine(typeLine, ctx) {
+    if (typeLine.startsWith(SUPERIOR_CN)) {
+        return SUPERIOR_EN + transTypeLine(typeLine.substring(SUPERIOR_CN.length), ctx);
+    }
+
+    if (typeLine.startsWith(SYNTHESISED_CN)) {
+        return SYNTHESISED_EN + transTypeLine(typeLine.substring(SYNTHESISED_CN.length), ctx);
     }
 
     //先尝试能否直接作为baseType翻译。
-    let val = tryTransBaseType(str);
+    let val = tryTransBaseType(typeLine, ctx);
     if (val) {
         return val;
     }
 
     //尝试失败，处理修饰词存在的情况。
     //修饰词以`的`、`之`结尾，但是由于`的`、`之`又可能出现在baseType中。
-    //以`的`、`之`为修饰词结尾，将baseType拆分为一个slices包含修饰词+"baseType"
+    //以`的`、`之`为修饰词结尾，将baseType拆分为一个slices，包含修饰词+"baseType"
     //此时以下情况：
     // - 得到的“baseType”就是baseType
     // - 得到的“baseType”拼接其前一个或前两个修饰词才是真正的baseType
     //
     //分别测试每一种可能性
     let pattern = /.+?[之的]/ug;
-    if (pattern.test(str)) {
+    if (pattern.test(typeLine)) {
         pattern.lastIndex = 0;
 
-        let len = str.length;
+        let len = typeLine.length;
         let slices = [];
         let lastIndex = 0;
         while (true) {
-            let matches = pattern.exec(str);
+            let matches = pattern.exec(typeLine);
             if (matches) {
                 let result = matches[0];
                 slices.push(result);
                 lastIndex = pattern.lastIndex;
             } else {
                 if (lastIndex < len) {
-                    slices.push(str.substring(lastIndex));
+                    slices.push(typeLine.substring(lastIndex));
                 }
                 break;
             }
         }
 
         let last = slices[slices.length - 1];
-        let val = tryTransBaseType(last);
+        let val = tryTransBaseType(last, ctx);
         if (val) {
             return val;
         }
@@ -203,14 +243,14 @@ export function transTypeLine(str) {
         //只有超过2个才测试最后两个slices连接起来的可能性，而等于两个时，在函数开始就进行了测试
         if (slices.length > 2) {
             let secondToLast = slices[slices.length - 2];
-            let val = tryTransBaseType(secondToLast + last);
+            let val = tryTransBaseType(secondToLast + last, ctx);
             if (val) {
                 return val;
             }
             //最多测试后三个slices连接起来的可能性。
             if (slices.length > 3) {
                 let thirdToLast = slices[slices.length - 3];
-                let val = tryTransBaseType(thirdToLast + secondToLast + last);
+                let val = tryTransBaseType(thirdToLast + secondToLast + last, ctx);
                 if (val) {
                     return val;
                 }
@@ -220,10 +260,77 @@ export function transTypeLine(str) {
 
     shouldBeTranlated({
         "type": "typeLine",
-        "content": str
+        "content": typeLine
     });
 
-    return str;
+    return typeLine;
+}
+
+/**
+ * 从typeLine中解析得到baseType。
+ * 适用于商品。
+ * 
+ * @param {*} typeLine 
+ */
+export function getBaseTypeFromTypeLine(typeLine, ctx) {
+    //逻辑基本等同于transTypeLine，唯一区别是返回值。
+    //TODO 重构代码，避免重复代码
+    if (typeLine.startsWith(SUPERIOR_CN)) {
+        typeLine = typeLine.substring(SUPERIOR_CN.length);
+    }
+
+    if (typeLine.startsWith(SYNTHESISED_CN)) {
+        typeLine = typeLine.substring(SYNTHESISED_CN.length);
+    }
+
+    if (tryTransBaseType(typeLine, ctx)) {
+        return typeLine;
+    }
+
+    let pattern = /.+?[之的]/ug;
+    if (pattern.test(typeLine)) {
+        pattern.lastIndex = 0;
+
+        let len = typeLine.length;
+        let slices = [];
+        let lastIndex = 0;
+        while (true) {
+            let matches = pattern.exec(typeLine);
+            if (matches) {
+                let result = matches[0];
+                slices.push(result);
+                lastIndex = pattern.lastIndex;
+            } else {
+                if (lastIndex < len) {
+                    slices.push(typeLine.substring(lastIndex));
+                }
+                break;
+            }
+        }
+
+        let last = slices[slices.length - 1];
+        let val = tryTransBaseType(last, ctx);
+        if (val) {
+            return last;
+        }
+
+        if (slices.length > 2) {
+            let secondToLast = slices[slices.length - 2];
+            let val = tryTransBaseType(secondToLast + last, ctx);
+            if (val) {
+                secondToLast + last
+            }
+            if (slices.length > 3) {
+                let thirdToLast = slices[slices.length - 3];
+                let val = tryTransBaseType(thirdToLast + secondToLast + last, ctx);
+                if (val) {
+                    return thirdToLast + secondToLast + last;
+                }
+            }
+        }
+    }
+
+    return typeLine;
 }
 
 /**
@@ -367,7 +474,7 @@ export function transModifier(str, ctx) {
     }
 
     //军帽词缀，不同于其它词缀，参数包括非数值（技能名称）。
-    //因为唯一，这里编码处理，如果以后存在大量的包含非数值参数的词缀，可以从归类为同一数据进行处理。
+    //因为唯一，这里编码处理，如果以后存在大量的包含非数值参数的词缀，可以从归类为同一类型并结合数据库进行处理。
     let p = /插入的技能石被 (\d+) 级的【(.+)】辅助/u;
     let matches = p.exec(str);
     if (matches) {
@@ -397,7 +504,7 @@ export function transModifier(str, ctx) {
 
     //解析匹配
     let m = Modifier.parse(str);
-    result = transModifierObject(m);
+    result = transModifierObject(m, ctx);
     if (result) {
         return result;
     }
@@ -405,7 +512,7 @@ export function transModifier(str, ctx) {
     //固化单数参数匹配
     if (m.hasSingleParam()) {
         let weldModifier = m.weldingSingleParams();
-        result = transModifierObject(weldModifier);
+        result = transModifierObject(weldModifier, ctx);
         if (result) {
             return result;
         }

@@ -37,7 +37,7 @@ export function translateItem(item) {
         if (item.baseType === "丝绸手套") {
             //可能是原版图标，也可能是传奇图标
             //根据传奇名称判断可能会漏判，因为瓦黄了不再是传奇名称但图标不变
-            if (item.icon.endsWith("GlovesInt3.png")||item.icon.endsWith("AsenathsGentleTouch.png")) {
+            if (item.icon.endsWith("GlovesInt3.png") || item.icon.endsWith("AsenathsGentleTouch.png")) {
                 item.baseType = "Silk Gloves";
             } else if (item.icon.endsWith("FingerlessSilkGloves.png")) {
                 item.baseType = "Fingerless Silk Gloves";

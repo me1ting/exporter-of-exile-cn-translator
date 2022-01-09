@@ -39,7 +39,7 @@ if __name__ == "__main__":
 
         for k, ids in cn_names.items():
             if len(ids) == 1:
-                f.write(f'"{k}":"{en_nodes[id]["name"]}",\n')
+                f.write(f'"{k}":"{en_nodes[ids[0]]["name"]}",\n')
         f.write('}')
 
     with open('../formulable_nodes_repeated.json', 'wt', encoding='utf-8') as f:

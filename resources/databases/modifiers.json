@@ -10221,7 +10221,7 @@
     "{0}% 烙印暴击伤害加成": "{0}% to Brand Critical Strike Multiplier",
     "烙印伤害提高 {0}%": "{0}% increased Brand Damage",
     "烙印伤害降低 {0}%": "{0}% reduced Brand Damage",
-    "每 {1} 点奉献使烙印伤害提高 {0}% increased Brand Damage per 10 Devotion": "{0}% increased Brand Damage per {1} Devotion",
+    "每 {1} 点奉献使烙印伤害提高 {0}% increased Brand Damage per {3} Devotion": "{0}% increased Brand Damage per {1} Devotion",
     "每 {1} 点奉献使烙印伤害降低 {0}%": "{0}% reduced Brand Damage per {1} Devotion",
     "法术技能最后一次重复始终暴击": "Spell Skills always deal Critical Strikes on final Repeat",
     "法术技能最后一次重复时 {0}% 暴击伤害加成": "Spell Skills have {0}% to Critical Strike Multiplier on final Repeat",
@@ -15224,7 +15224,7 @@
     "若范围内含有 {0} 点敏捷，【灵体投掷】击中时有 {1} 的几率为【瓦尔·灵体投掷】提供 1 个【瓦尔之灵】": "With at least {0} Dexterity in Radius, Spectral Throw has {1} chance on Hit to give a Vaal soul to Vaal Spectral Throw",
     "若范围内至少有 {0} 点智慧，【召唤灵体】击败敌人时有 {1} 的几率获得 {2} 秒的噬魂者效果": "With at least {0} Intelligence in Radius, Raised Spectres have a {1} chance to gain Soul Eater for {2} seconds on Kill",
     "若范围内含有 {0} 点敏捷，【毒蛇打击】每次造成中毒时有 {1} 的几率获得 {2} 秒不洁之力": "With at least {0} Dexterity in Radius, Viper Strike has a {1} chance per Poison on Enemy to grant Unholy Might for {2} seconds on Hit",
-    "【魔卫复苏】的重击攻击会使冷却回复速度提高 {0}": "Zombies' Slam Attack has {0} increased Cooldown Recovery Rate",
+    "【魔卫复苏】的重击攻击会使冷却回复速度提高 {0}%": "Zombies' Slam Attack has {0}% increased Cooldown Recovery Rate",
     "【魔卫复苏】的重击攻击伤害提高 {0}": "Attack deals {0} increased Damage",
     "用该武器击中时，暴击率为 {0} ": "Critical Strike Chance is {0} for Hits with this Weapon",
     "每 {1} 品质 {0} 武器范围": "{0} Weapon Range per {1} Quality",
@@ -22265,5 +22265,7 @@
     "暴走状态时免疫物理伤害 {0} 秒": "Gain Immunity to Physical Damage for {0} seconds on Rampage",
     "暴走状态时免疫物理伤害 1 秒": "Gain Immunity to Physical Damage for 1 second on Rampage",
     "【将军之吼】的冷却回复速度加快 {0}%": "General's Cry has {0}% increased Cooldown Recovery Rate",
-    "调整投射物数量的词缀改为": "Modifiers to number of Projectiles instead apply"
+    "调整投射物数量的词缀改为": "Modifiers to number of Projectiles instead apply",
+    "若你近期内被击中，技能可以额外发射 {0} 个投射物": "Skills fire {0} additional Projectiles if you've been Hit Recently",
+    "若你近期内被击中，技能可以额外发射 1 个投射物": "Skills fire an additional Projectile if you've been Hit Recently"
 }

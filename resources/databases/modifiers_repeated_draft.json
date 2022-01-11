@@ -78,8 +78,6 @@
 "魔力药剂每 {1} 秒获得 {0} 次使用机会":"Mana Flasks gain {0} Charge every {1} seconds",
 "地雷着陆时使它们附近的敌人缓速 {0} 秒，移动速度降低 {1}%":"Mines Hinder Enemies near them for {0} seconds when they Land, reducing Movement Speed by {1}%",
 "地雷着陆时使它们附近的敌人缓速 {0} 秒，移动速度降低 {1}%":"Mines Hinder Enemies near them for {0} second when they Land, reducing Movement Speed by {1}%",
-"若你近期内被击中，技能可以额外发射 {0} 个投射物":"Skills fire {0} additional Projectiles if you've been Hit Recently",
-"若你近期内被击中，技能可以额外发射 {0} 个投射物":"Skills fire an additional Projectile if you've been Hit Recently",
 "若你近期内使用过位移技能，技能可以额外发射 {0} 个投射物":"Skills fire {0} additional Projectiles if you've used a Movement Skill Recently",
 "若你近期内使用过位移技能，技能可以额外发射 {0} 个投射物":"Skills fire an additional Projectile if you've used a Movement Skill Recently",
 "冲刺具有 {0} 冷却时间":"Dash has {0} Cooldowns",

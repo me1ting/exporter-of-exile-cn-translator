@@ -22248,5 +22248,15 @@
     "有 1 个白色插槽": "Has {0} White Socket",
     "有 {0} 个白色插槽": "Has {0} White Sockets",
     "每秒回复 {0} 能量护盾": "Regenerate {0} Energy Shield per second",
-    "每个影响你的苍白之凝珠宝都使召唤生物持续伤害加成{0}%，最多 {1}%": "Minions have {0}% to Damage over Time Multiplier per\nGhastly Eye Jewel affecting you, up to a maximum of {1}%"
+    "每个影响你的苍白之凝珠宝都使召唤生物持续伤害加成{0}%，最多 {1}%": "Minions have {0}% to Damage over Time Multiplier per\nGhastly Eye Jewel affecting you, up to a maximum of {1}%",
+    "图腾发射 {0} 个额外投射物": "Totems fire {0} additional Projectiles",
+    "图腾发射 1 个额外投射物": "Totems fire 1 additional Projectile",
+    "药剂持续期间，元素伤害提高 {0}%": "{0}% increased Elemental Damage during any Flask Effect",
+    "允许的前缀 {0}": "{0} Prefix Modifier allowed",
+    "允许的后缀 {0}": "{0} Suffix Modifier allowed",
+    "结界破坏时，获得 {0} 秒肾上腺素": "Gain Adrenaline for {0} seconds when Ward Breaks",
+    "结界破坏时，获得 1 秒肾上腺素": "Gain Adrenaline for 1 second when Ward Breaks",
+    "你总共消耗 12 枚钢刃碎片后\n技能在 4 秒内发射 3 枚额外投射物": "Skills Fire 3 additional Projectiles for 4 seconds after\nyou consume a total of 12 Steel Shards",
+    "魔武战号增助额外 {0} 次攻击": "Battlemage's Cry Exerts {0} additional Attacks",
+    "魔武战号增助额外 1 次攻击": "Battlemage's Cry Exerts 1 additional Attack"
 }

@@ -62,6 +62,7 @@ class Part {
         let objects = [];
         for (let i = 0; i < lines.length; i++) {
             let line = lines[i];
+            //存在是复合词缀的前缀的可能性，找到其所属的复合词缀
             let res = getCompoundModifiers(line);
             if (res) {
                 //TODO：检查每一种长度的可能性

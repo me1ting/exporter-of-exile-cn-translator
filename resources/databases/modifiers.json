@@ -15821,10 +15821,7 @@
     "姿态技能的冷却回复速度减慢 {0}": "{0} reduced Cooldown Recovery Rate for Stance Skills",
     "沙姿态下，效果区域扩大 {0}": "{0} increased Area of Effect while in Sand Stance",
     "沙姿态下，效果区域缩小 {0}": "{0} reduced Area of Effect while in Sand Stance",
-    "若你近期内换过姿态，则攻击速度加快 {0}": "{0} increased Attack Speed if you've changed Stance Recently",
-    "若你近期内换过姿态，则攻击速度减慢 {0}": "{0} reduced Attack Speed if you've changed Stance Recently",
-    "专注时造成的异常状态持续时间延长 {0}": "{0} increased Duration of Ailments you inflict while Focussed",
-    "专注时造成的异常状态持续时间缩短 {0}": "{0} reduced Duration of Ailments you inflict while Focussed",
+    "若你近期内换过姿态，则攻击速度加快 {0}%": "{0}% increased Attack Speed if you've changed Stance Recently",
     "持弓类时，施加的异常状态持续时间延长 {0}": "{0} increased Duration of Ailments inflicted while wielding a Bow",
     "持弓类时，施加的异常状态持续时间缩短 {0}": "{0} reduced Duration of Ailments inflicted while wielding a Bow",
     "潜行提高 {0}": "{0} increased Stealth",
@@ -22258,5 +22255,15 @@
     "结界破坏时，获得 1 秒肾上腺素": "Gain Adrenaline for 1 second when Ward Breaks",
     "你总共消耗 12 枚钢刃碎片后\n技能在 4 秒内发射 3 枚额外投射物": "Skills Fire 3 additional Projectiles for 4 seconds after\nyou consume a total of 12 Steel Shards",
     "魔武战号增助额外 {0} 次攻击": "Battlemage's Cry Exerts {0} additional Attacks",
-    "魔武战号增助额外 1 次攻击": "Battlemage's Cry Exerts 1 additional Attack"
+    "魔武战号增助额外 1 次攻击": "Battlemage's Cry Exerts 1 additional Attack",
+    "被击中时，每个耐力球可使你获得 {0} 秒的【猛攻】状态": "You gain Onslaught for {0} seconds per Endurance Charge when Hit",
+    "被击中时，每个耐力球可使你获得 1 秒的【猛攻】状态": "You gain Onslaught for 1 second per Endurance Charge when Hit",
+    "【断金之刃】的主投射物会穿透 {0} 个额外目标": " Lancing Steel's primary Projectile Pierces {0} additional Targets",
+    "【断金之刃】的主投射物会穿透 1 个额外目标": " Lancing Steel's primary Projectile Pierces 1 additional Target",
+    "投掷陷阱的技能会投掷最多 {0} 个额外陷阱": "Skills which Throw Traps throw up to {0} additional Traps",
+    "投掷陷阱的技能会投掷最多 1 个额外陷阱": "Skills which Throw Traps throw up to 1 additional Trap",
+    "暴走状态时免疫物理伤害 {0} 秒": "Gain Immunity to Physical Damage for {0} seconds on Rampage",
+    "暴走状态时免疫物理伤害 1 秒": "Gain Immunity to Physical Damage for 1 second on Rampage",
+    "【将军之吼】的冷却回复速度加快 {0}%": "General's Cry has {0}% increased Cooldown Recovery Rate",
+    "调整投射物数量的词缀改为": "Modifiers to number of Projectiles instead apply"
 }

@@ -7,7 +7,7 @@ import {
  * 获取baseType所属的大类（EN，项目内部划分，非POE通用概念）。
  * 有以下大类：weapon,armour,accessory,flask,gem,jewel
  * 分别表示：武器，护甲，饰品，药剂，宝石，珠宝
- * 如果无法判定类型，返回"unknown"
+ * 如果无法判定类型，返回null
  * 
  * 
  * @param {*} baseType baseType
@@ -24,7 +24,7 @@ export function getType(baseType) {
 
     val = armour.get(baseType);//护甲
     if (!val) {
-        val = repeatedWeapons.get(val);
+        val = repeatedArmour.get(val);
     }
     if (val) {
         return "armour";
@@ -46,7 +46,7 @@ export function getType(baseType) {
     if (val) {
         return "jewel";
     }
-    return "unknown";
+    return null;
 }
 
 /**

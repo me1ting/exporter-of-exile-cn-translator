@@ -1,35 +1,42 @@
 import { modifiers } from "./load-resources.js";
 import { getCompoundModifiers, transTypeLine, transItemClass, transModifier, transName, transProperty, tryTransProperty, tryTransRequirement, getType, getBaseTypeFromTypeLine } from "./resources.js";
 
-const PARTS_SEPARATOR = "--------";
-const LINES_SEPARATOR = "\r\n";
-const KEY_VALUE_SEPARATOR = ": ";
-const COMPOUND_SUB_LINE_SEPARATOR = "\n";
+const PART_SEPARATOR = "\r\n--------\r\n"; // 区域分隔符
+const LINE_SEPARATOR = "\r\n"; // 行分隔符
+const KEY_VALUE_SEPARATOR = ": "; // 键值分隔符
+const SUB_MODIFIER_SEPARATOR = "\n"; // 复合词缀子词缀分隔符
 
-const KEY_ITEM_CLASS = "物品类别";
+const ITEM_CLASS_CN = "物品类别";
 
+/**
+ * 将交易页面的中文商品信息翻译为英文。
+ * 
+ * @param {*} str 
+ * @returns 
+ */
 export function translateGoods(str) {
     let goods = Goods.parse(str);
     return goods.getTranslation();
 }
 
+/**
+ * 表示一件商品。
+ */
 class Goods {
     constructor(parts) {
         this.parts = parts;
     }
 
+    /**
+     * 将中文商品信息解析为商品对象。
+     * @param {*} str 
+     * @returns 
+     */
     static parse(str) {
-        let parts = str.split(PARTS_SEPARATOR);
+        let parts = str.split(PART_SEPARATOR);
 
         let objects = [];
         for (let part of parts) {
-            //不使用trim，是因为前后空白可能属于词缀
-            if (part.startsWith(LINES_SEPARATOR)) {
-                part = part.substring(LINES_SEPARATOR.length);
-            }
-            if (part.endsWith(LINES_SEPARATOR)) {
-                part = part.substring(0, part.length - LINES_SEPARATOR.length);
-            }
             objects.push(Part.parse(part));
         }
 
@@ -47,7 +54,7 @@ class Goods {
             buf.push(part.getTranslation(ctx));
         }
 
-        return buf.join(`${LINES_SEPARATOR}${PARTS_SEPARATOR}${LINES_SEPARATOR}`);
+        return buf.join(`${PART_SEPARATOR}`);
     }
 }
 
@@ -57,7 +64,7 @@ class Part {
     }
 
     static parse(str) {
-        let lines = str.split(LINES_SEPARATOR);
+        let lines = str.split(LINE_SEPARATOR);
 
         let objects = [];
         for (let i = 0; i < lines.length; i++) {
@@ -73,7 +80,7 @@ class Part {
                         buf.push(lines[j]);
                     }
 
-                    objects.push(Line.parse(buf.join(COMPOUND_SUB_LINE_SEPARATOR)));
+                    objects.push(Line.parse(buf.join(SUB_MODIFIER_SEPARATOR)));
                     i += count;
                     continue;
                 }
@@ -93,7 +100,7 @@ class Part {
 
         let isMetaPart = false;
         let firstLine = this.lines[0];
-        if (firstLine.type === LINE_TYPE_KEY_VALUE && firstLine.data.key === KEY_ITEM_CLASS) {
+        if (firstLine.type === LINE_TYPE_KEY_VALUE && firstLine.data.key === ITEM_CLASS_CN) {
             isMetaPart = true;
         }
 
@@ -126,7 +133,7 @@ class Part {
             buf.push(line.getTranslation(ctx));
         }
 
-        return buf.join(`${LINES_SEPARATOR}`);
+        return buf.join(`${LINE_SEPARATOR}`);
     }
 }
 
@@ -176,7 +183,7 @@ class Line {
             let key = this.data.key;
             let value = this.data.value;
 
-            if (key === KEY_ITEM_CLASS) {
+            if (key === ITEM_CLASS_CN) {
                 value = transItemClass(value);
             }
 

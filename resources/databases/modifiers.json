@@ -22267,5 +22267,6 @@
     "【将军之吼】的冷却回复速度加快 {0}%": "General's Cry has {0}% increased Cooldown Recovery Rate",
     "调整投射物数量的词缀改为": "Modifiers to number of Projectiles instead apply",
     "若你近期内被击中，技能可以额外发射 {0} 个投射物": "Skills fire {0} additional Projectiles if you've been Hit Recently",
-    "若你近期内被击中，技能可以额外发射 1 个投射物": "Skills fire an additional Projectile if you've been Hit Recently"
+    "若你近期内被击中，技能可以额外发射 1 个投射物": "Skills fire an additional Projectile if you've been Hit Recently",
+    "战吼冷却回复速度提高 {0}%": "{0}% increased Warcry Cooldown Recovery Rate"
 }

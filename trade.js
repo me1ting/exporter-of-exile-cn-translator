@@ -67,7 +67,7 @@ class Part {
         let lines = str.split(LINE_SEPARATOR);
 
         let objects = [];
-        for (let i = 0; i < lines.length; i++) {
+        for (let i = 0; i < lines.length;) {
             let line = lines[i];
             //存在是复合词缀的前缀的可能性，找到其所属的复合词缀
             let res = getCompoundModifiers(line);
@@ -87,6 +87,7 @@ class Part {
             }
 
             objects.push(Line.parse(line));
+            i++;
         }
 
         return new Part(objects);

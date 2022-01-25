@@ -213,8 +213,8 @@ def generate_modifiers():
     data = {}
     # 记录复合词缀
     data3 = {}
-    
-    for k,v in db.items():
+
+    for k, v in db.items():
         fromTplBody, fromParams = parseTemplate(k)
         toTplBody, toParams = parseTemplate(v)
 
@@ -222,7 +222,8 @@ def generate_modifiers():
         if fromTplBody in data:
             print(f"repeated template body: {fromTplBody}")
 
-        data[fromTplBody] = {"fromParams": fromParams, "toTplBody": toTplBody, "toParams": toParams}
+        data[fromTplBody] = {"fromParams": fromParams,
+                             "toTplBody": toTplBody, "toParams": toParams}
 
         # 记录复合词缀
         if '\n' in fromTplBody:
@@ -236,16 +237,15 @@ def generate_modifiers():
             else:
                 data3[first_line] = [count]
 
-
     save_dict_as_javascript('./modifiers.js', data, 'modifiers')
 
     db = None
     with open('./databases/modifiers_repeated.json', 'rt', encoding="utf-8") as f:
         db = json.loads(f.read())
-    
+
     data2 = {}
 
-    for k,vals in db.items():
+    for k, vals in db.items():
         fromTplBody, fromParams = parseTemplate(k)
         if fromTplBody in data or fromTplBody in data2:
             print(f"repeated template body: {k}")
@@ -259,8 +259,9 @@ def generate_modifiers():
 
             toTplBody, toParams = parseTemplate(v)
 
-            formattedVals.append({"fromParams": fromParams, "toTplBody": toTplBody, "toParams": toParams, "ctx": ctx})
-        
+            formattedVals.append(
+                {"fromParams": fromParams, "toTplBody": toTplBody, "toParams": toParams, "ctx": ctx})
+
         data2[fromTplBody] = formattedVals
 
         # 记录复合词缀
@@ -325,6 +326,7 @@ def generate_jewels():
 
 # trade/item-classes.js
 
+
 def generate_item_classes():
     data = {}
 
@@ -335,6 +337,7 @@ def generate_item_classes():
             data[k] = v
 
     save_dict_as_javascript('./trade/item-classes.js', data, 'itemClasses')
+
 
 def save_dict_as_javascript(path, data, name):
     with open(path, 'wt') as f:

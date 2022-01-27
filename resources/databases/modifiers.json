@@ -1,5 +1,4 @@
 {
-    "生命回复": "Life Regen",
     "你的诅咒效果总降 {0}%": "{0}% less Effect of your Curses",
     "复仇之灵": "Minion Instability",
     "终结": "Culling Strike",
@@ -22045,5 +22044,6 @@
     "当你拥有兽化的召唤生物时，攻击附加 {0} - {1} 基础物理伤害": "Adds {0}-{1} Physical Damage to Attacks while you have a Bestial Minion",
     "当你拥有兽化的召唤生物时，攻击时附加 {0} - {1} 基础混沌伤害": "Adds {0}-{1} Chaos Damage to Attacks while you have a Bestial Minion",
     "【击刃】冷却回复速度提高 {0}%": "Riposte has {0}% increased Cooldown Recovery Rate",
-    "【击刃】冷却回复速度降低 {0}%": "Riposte has {0}% reduced Cooldown Recovery Rate"
+    "【击刃】冷却回复速度降低 {0}%": "Riposte has {0}% reduced Cooldown Recovery Rate",
+    "敌人击中你的闪电伤害会特别幸运": "Lightning Damage of Enemies Hitting you is Lucky"
 }

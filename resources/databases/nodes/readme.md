@@ -1,5 +1,5 @@
 # about
-根据`/account/view-profile/**`分别获取得到中文版和英文版的天赋树，手动删减后得到两个json文件。
+通过`/account/view-profile/**`分别获取得到中文版和英文版的天赋树，手动删减后得到两个json文件。
 
 解析两个json文件，就可以得到所有天赋树相关信息。
 

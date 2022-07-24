@@ -1,1 +1,0 @@
-export const repeatedArmour = new Map([["\u4e1d\u7ef8\u624b\u5957",[{"v": "Silk Gloves", "ctx": {"uniquesCN": ["\u5b89\u8d5b\u5a1c\u4e1d\u7684\u5b89\u629a\u4e4b\u8bed"]}}, {"v": "Fingerless Silk Gloves", "default": true}]],]);
